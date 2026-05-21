@@ -174,26 +174,21 @@ export async function fetchGitHubData(login: string, token: string | undefined):
 }
 
 function fallbackData(_reason: string): GitHubData {
+  // No fabricated commits — empty state with an honest "awaiting token" signal.
+  // The UI will render an empty commits list and a flat contribution grid until
+  // GITHUB_TOKEN is provided in the deployment environment.
   const today = new Date();
   const weeks: ContributionWeek[] = Array.from({ length: 26 }, (_, w) => ({
     days: Array.from({ length: 7 }, (_, d) => {
       const date = new Date(today);
       date.setDate(date.getDate() - ((26 - w) * 7) + d);
-      const count = Math.max(0, Math.round((Math.sin(w * 0.6 + d * 0.3) + 1) * 3));
-      return { date: date.toISOString().slice(0, 10), count, level: levelFor(count) };
+      return { date: date.toISOString().slice(0, 10), count: 0, level: 0 as const };
     }),
   }));
-  const commits: Commit[] = [
-    { repo: "jonneylon/nextwork", message: "carousel: settle motion timing, drop premature scroll trigger", sha: "a1b2c3d", url: "#", date: new Date(today.getTime() - 1000 * 60 * 90).toISOString(), language: "TypeScript" },
-    { repo: "jonneylon/sona-speech", message: "telehealth: wire booking buffer override for ACC clients", sha: "e4f5g6h", url: "#", date: new Date(today.getTime() - 1000 * 60 * 60 * 5).toISOString(), language: "Astro" },
-    { repo: "jonneylon/tracks", message: "rules engine: ratchet stop on confirmed breakout", sha: "i7j8k9l", url: "#", date: new Date(today.getTime() - 1000 * 60 * 60 * 18).toISOString(), language: "TypeScript" },
-    { repo: "jonneylon/portfolio", message: "feat: live github feed + warm minimalist tokens", sha: "m0n1o2p", url: "#", date: new Date(today.getTime() - 1000 * 60 * 60 * 26).toISOString(), language: "Astro" },
-    { repo: "jonneylon/nextwork", message: "generator: research-first thesis lands in v3", sha: "q3r4s5t", url: "#", date: new Date(today.getTime() - 1000 * 60 * 60 * 38).toISOString(), language: "TypeScript" },
-  ];
   return {
     contributions: weeks,
-    totalContributions: weeks.reduce((sum, w) => sum + w.days.reduce((s, d) => s + d.count, 0), 0),
-    commits,
+    totalContributions: 0,
+    commits: [],
     syncedAt: new Date().toISOString(),
     source: "fallback",
   };
