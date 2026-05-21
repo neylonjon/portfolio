@@ -1,0 +1,25 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Identity from "../components/Identity.astro";
+import NowFeed from "../components/NowFeed.astro";
+import FieldNotes from "../components/FieldNotes.astro";
+import Signal from "../components/Signal.astro";
+import Footer from "../components/Footer.astro";
+
+Astro.response.headers.set(
+  "Cache-Control",
+  "public, s-maxage=600, stale-while-revalidate=3600"
+);
+---
+
+<Layout>
+  <Header />
+  <main id="main">
+    <Identity />
+    <NowFeed />
+    <FieldNotes />
+    <Signal />
+  </main>
+  <Footer />
+</Layout>

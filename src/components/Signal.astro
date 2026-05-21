@@ -1,0 +1,73 @@
+---
+const channels = [
+  { label: "email", value: "jon@nextwork.org", href: "mailto:jon@nextwork.org" },
+  { label: "github", value: "@jonneylon", href: "https://github.com/jonneylon" },
+  { label: "x", value: "@jonneylon", href: "https://x.com/jonneylon" },
+  { label: "linkedin", value: "in/jonneylon", href: "https://www.linkedin.com/in/jonneylon" },
+];
+---
+
+<section id="signal" class="container-wide py-16 md:py-20">
+  <header class="flex items-baseline justify-between mb-8 gap-4">
+    <span class="section-label">signal</span>
+    <span class="mono text-[11px] text-[color:var(--color-faint)]">
+      reach me here · slow on weekends
+    </span>
+  </header>
+
+  <ul class="channels" role="list">
+    {channels.map((c) => (
+      <li class="row">
+        <span class="mono lbl">{c.label}</span>
+        <a class="val !border-none" href={c.href} target={c.href.startsWith("http") ? "_blank" : undefined} rel={c.href.startsWith("http") ? "noopener" : undefined}>
+          {c.value}
+          <span class="arrow" aria-hidden="true">→</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .channels {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .row {
+    border-top: 1px solid var(--color-hairline);
+  }
+  .row:last-child {
+    border-bottom: 1px solid var(--color-hairline);
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 0.875rem 0;
+  }
+  .lbl {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-muted);
+  }
+  .val {
+    font-size: 16px;
+    color: var(--color-fg);
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    transition: color 160ms ease;
+  }
+  .val .arrow {
+    color: var(--color-faint);
+    font-size: 13px;
+    transition: transform 160ms ease, color 160ms ease;
+  }
+  .val:hover .arrow {
+    transform: translateX(3px);
+    color: var(--color-accent);
+  }
+</style>

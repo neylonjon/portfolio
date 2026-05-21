@@ -1,0 +1,58 @@
+---
+import { fetchGitHubData } from "../lib/github";
+import ContributionGraph from "./ContributionGraph.astro";
+import CommitsTicker from "./CommitsTicker.astro";
+
+const login = process.env.GITHUB_USER ?? "jonneylon";
+const token = process.env.GITHUB_TOKEN;
+const data = await fetchGitHubData(login, token);
+
+function formatSync(iso: string) {
+  const diff = Date.now() - new Date(iso).getTime();
+  const min = Math.floor(diff / 60000);
+  if (min < 1) return "just now";
+  if (min < 60) return `${min}m ago`;
+  const hr = Math.floor(min / 60);
+  return `${hr}h ago`;
+}
+---
+
+<section id="now" class="container-wide py-12 md:py-16 hairline-b">
+  <header class="flex items-baseline justify-between mb-8 gap-4">
+    <span class="section-label">now</span>
+    <span class="mono text-[11px] text-[color:var(--color-faint)] tabular-nums">
+      {data.source === "live" ? "live · " : "cached · "}synced {formatSync(data.syncedAt)}
+    </span>
+  </header>
+
+  <div class="now-grid">
+    <div class="commits-pane">
+      <h2 class="mono text-[11px] uppercase tracking-[0.12em] text-[color:var(--color-muted)] mb-3">
+        latest commits
+      </h2>
+      <CommitsTicker commits={data.commits} />
+    </div>
+
+    <div class="graph-pane">
+      <h2 class="mono text-[11px] uppercase tracking-[0.12em] text-[color:var(--color-muted)] mb-3">
+        cadence · 26w
+      </h2>
+      <ContributionGraph weeks={data.contributions} total={data.totalContributions} />
+    </div>
+  </div>
+</section>
+
+<style>
+  .now-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 3.5rem;
+    align-items: start;
+  }
+  @media (max-width: 900px) {
+    .now-grid {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+  }
+</style>

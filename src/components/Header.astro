@@ -1,0 +1,29 @@
+---
+const buildVersion = "v0.1.0";
+const buildDate = new Date().toISOString().slice(0, 10);
+---
+
+<header class="hairline-b">
+  <div class="container-wide flex items-baseline justify-between py-5 gap-4">
+    <a
+      href="/"
+      class="!border-none text-base font-medium tracking-tight"
+      aria-label="Jon Neylon — home"
+    >
+      jon neylon
+    </a>
+
+    <nav aria-label="Section navigation" class="hidden sm:flex items-baseline gap-6 text-[13px]">
+      <a href="#now" class="text-[color:var(--color-muted)] hover:text-[color:var(--color-fg)] !border-none">now_</a>
+      <a href="#notes" class="text-[color:var(--color-muted)] hover:text-[color:var(--color-fg)] !border-none">notes_</a>
+      <a href="#signal" class="text-[color:var(--color-muted)] hover:text-[color:var(--color-fg)] !border-none">signal_</a>
+    </nav>
+
+    <span
+      class="mono text-[11px] text-[color:var(--color-faint)] tabular-nums whitespace-nowrap"
+      aria-label={`Build ${buildVersion} dated ${buildDate}`}
+    >
+      {buildVersion} · {buildDate}
+    </span>
+  </div>
+</header>

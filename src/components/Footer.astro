@@ -1,0 +1,15 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="hairline mt-24">
+  <div class="container-wide py-10 flex flex-col sm:flex-row items-baseline justify-between gap-4 text-[12px] text-[color:var(--color-muted)]">
+    <p>
+      &copy; {year} Jon Neylon · Wellington, NZ
+    </p>
+    <p class="mono text-[11px] text-[color:var(--color-faint)]">
+      built with astro, deployed on vercel
+      <span aria-hidden="true" class="ml-2">✿</span>
+    </p>
+  </div>
+</footer>
