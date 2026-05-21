@@ -1,11 +1,12 @@
 ---
-import { fetchGitHubData } from "../lib/github";
+import type { GitHubData } from "../lib/github";
 import ContributionGraph from "./ContributionGraph.astro";
 import CommitsTicker from "./CommitsTicker.astro";
 
-const login = process.env.GITHUB_USER ?? "jonneylon";
-const token = process.env.GITHUB_TOKEN;
-const data = await fetchGitHubData(login, token);
+interface Props {
+  data: GitHubData;
+}
+const { data } = Astro.props;
 
 function formatSync(iso: string) {
   const diff = Date.now() - new Date(iso).getTime();
@@ -18,12 +19,22 @@ function formatSync(iso: string) {
 ---
 
 <section id="now" class="container-wide py-12 md:py-16 hairline-b">
-  <header class="flex items-baseline justify-between mb-8 gap-4">
+  <header class="flex items-baseline justify-between mb-8 gap-4 flex-wrap">
     <span class="section-label">now</span>
     <span class="mono text-[11px] text-[color:var(--color-faint)] tabular-nums">
-      {data.source === "live" ? "live · " : "cached · "}synced {formatSync(data.syncedAt)}
+      {data.source === "live" ? "live" : "cached"} · {data.accounts.length} account{data.accounts.length === 1 ? "" : "s"} · synced {formatSync(data.syncedAt)}
     </span>
   </header>
+  {data.accounts.length > 0 && (
+    <p class="mono text-[10px] text-[color:var(--color-faint)] mb-6 tracking-[0.06em]" aria-label="Tracked GitHub accounts">
+      {data.accounts.map((a, i) => (
+        <>
+          <a href={`https://github.com/${a}`} target="_blank" rel="noopener" class="!border-none hover:text-[color:var(--color-accent)]">@{a}</a>
+          {i < data.accounts.length - 1 && <span class="text-[color:var(--color-faint)]"> · </span>}
+        </>
+      ))}
+    </p>
+  )}
 
   <div class="now-grid">
     <div class="commits-pane">
@@ -32,7 +43,7 @@ function formatSync(iso: string) {
       </h2>
       {data.commits.length === 0 ? (
         <p class="empty-state mono">
-          awaiting first sync — github token not yet configured.
+          awaiting first sync. github token not yet configured.
         </p>
       ) : (
         <CommitsTicker commits={data.commits} />

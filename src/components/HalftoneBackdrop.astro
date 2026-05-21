@@ -1,0 +1,61 @@
+---
+import type { ContributionWeek } from "../lib/github";
+
+interface Props {
+  weeks: ContributionWeek[];
+  totalContributions: number;
+}
+
+const { weeks, totalContributions } = Astro.props;
+
+// Pack contributions into a 2D grid: rows = days-of-week (7), cols = weeks (variable).
+const cols = weeks.length;
+const rows = 7;
+const grid: number[][] = Array.from({ length: rows }, (_, r) =>
+  Array.from({ length: cols }, (_, c) => weeks[c]?.days[r]?.count ?? 0)
+);
+
+// Normalize aggregate activity 0..1 with a soft ceiling at 1500 contributions/year.
+const activity = Math.min(1, Math.max(0, totalContributions / 1500));
+
+// Pass the data as JSON in a data attribute so the inline script can read it
+// without needing to import this component's frontmatter.
+const payload = JSON.stringify({ grid, activity });
+---
+
+<canvas
+  id="halftone-backdrop"
+  data-halftone={payload}
+  aria-hidden="true"
+></canvas>
+
+<style>
+  #halftone-backdrop {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    pointer-events: none;
+    /* Below-content fallback color in case WebGL is unavailable. */
+    background: var(--color-bg);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    /* Keep static. mountHalftone() already renders a single frame and stops. */
+  }
+</style>
+
+<script>
+  import { mountHalftone } from "../lib/halftone";
+
+  const canvas = document.getElementById("halftone-backdrop") as HTMLCanvasElement | null;
+  if (canvas) {
+    try {
+      const raw = canvas.dataset.halftone ?? "{}";
+      const { grid, activity } = JSON.parse(raw) as { grid: number[][]; activity: number };
+      mountHalftone(canvas, { grid, activity });
+    } catch (err) {
+      console.warn("[halftone] init failed:", err);
+    }
+  }
+</script>

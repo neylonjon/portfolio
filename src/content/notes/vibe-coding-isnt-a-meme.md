@@ -7,4 +7,4 @@ tags: [ai, design-engineering, workflow]
 
 The first six months I treated Claude as autocomplete-with-receipts. It made me faster at the things I already knew how to do, and exactly as slow at the things I didn't.
 
-The shift came when I started writing for the model the way I'd write for a new design engineer joining the team — context first, constraints second, instructions last. Suddenly the output got opinionated. The model would push back on bad framings, suggest a smaller diff, refuse a request that conflicted with the codebase's actual conventions. That's not autocomplete. That's a collaborator. Most of the design problems I care about live in that handoff now.
+The shift came when I started writing for the model the way I'd write for a new design engineer joining the team. Context first, constraints second, instructions last. Suddenly the output got opinionated. The model would push back on bad framings, suggest a smaller diff, refuse a request that conflicted with the codebase's actual conventions. That's not autocomplete. That's a collaborator. Most of the design problems I care about live in that handoff now.
