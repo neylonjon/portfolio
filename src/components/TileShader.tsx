@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Dithering } from "@paper-design/shaders-react";
 
 /**
@@ -9,6 +10,10 @@ import { Dithering } from "@paper-design/shaders-react";
  * Renders as an absolutely positioned fill behind tile content. Idle
  * opacity is 0; CSS hover on the parent tile fades it in via the
  * .tile-shader-layer class in the parent's scoped styles.
+ *
+ * Respects prefers-reduced-motion by freezing the shader (speed: 0)
+ * rather than removing it — visitors still see the static dither
+ * pattern on hover, just without the movement.
  */
 interface Props {
   /** Lower = subtler. Higher = more visible movement. */
@@ -21,9 +26,19 @@ export default function TileShader({
   speed = 1.5,
   colorFront = "#FF6A3D",
 }: Props) {
+  const [reduceMotion, setReduceMotion] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReduceMotion(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setReduceMotion(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
   return (
     <Dithering
-      speed={speed}
+      speed={reduceMotion ? 0 : speed}
       shape="warp"
       type="8x8"
       size={1.1}

@@ -37,7 +37,7 @@ const refreshedAgo = formatSync(data.syncedAt);
 
     {/* LIVE COMMIT STREAM tile (tall, right) */}
     <div class="tile tile-stream tile-hover reveal" style="--reveal-delay: 80ms;">
-      <div class="tile-shader-layer" aria-hidden="true"><TileShader client:visible /></div>
+      <div class="tile-shader-layer" aria-hidden="true"><TileShader client:load /></div>
       <header class="stream-head">
         <div class="stream-label-row">
           <span class="diamond" aria-hidden="true"></span>
@@ -71,7 +71,7 @@ const refreshedAgo = formatSync(data.syncedAt);
 
     {/* CADENCE tile (bottom-left) */}
     <div class="tile tile-cadence tile-hover reveal" style="--reveal-delay: 160ms;">
-      <div class="tile-shader-layer" aria-hidden="true"><TileShader client:visible /></div>
+      <div class="tile-shader-layer" aria-hidden="true"><TileShader client:load /></div>
       <header class="card-head">
         <div class="label-row">
           <span class="diamond" aria-hidden="true"></span>
@@ -179,7 +179,8 @@ const refreshedAgo = formatSync(data.syncedAt);
                 border-color 280ms var(--ease-out-quart);
   }
   /* Paper Shader overlay layer (Dithering canvas). Idle: invisible.
-     Hover: fades in via blend mode for the dithered orange wash. */
+     Hover: fades in. No mix-blend-mode — the shader's rich orange on
+     transparent reads cleanly as a straight overlay. */
   .tile-shader-layer {
     position: absolute;
     inset: 0;
@@ -187,14 +188,13 @@ const refreshedAgo = formatSync(data.syncedAt);
     opacity: 0;
     transition: opacity 350ms var(--ease-out-quart);
     pointer-events: none;
-    mix-blend-mode: screen;
   }
   .tile-stream > :not(.tile-shader-layer),
   .tile-cadence > :not(.tile-shader-layer) {
     position: relative;
     z-index: 1;
   }
-  @media (hover: hover) and (pointer: fine) {
+  @media (hover: hover) {
     .tile-stream:hover,
     .tile-cadence:hover {
       border-color: rgba(255, 106, 61, 0.4);
@@ -205,12 +205,7 @@ const refreshedAgo = formatSync(data.syncedAt);
     }
     .tile-stream:hover .tile-shader-layer,
     .tile-cadence:hover .tile-shader-layer {
-      opacity: 0.5;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .tile-shader-layer {
-      display: none;
+      opacity: 0.7;
     }
   }
   .tile-accounts {

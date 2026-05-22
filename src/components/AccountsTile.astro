@@ -25,7 +25,7 @@ const padded = accounts.length.toString().padStart(3, "0");
 ---
 
 <article class="at-tile">
-  <div class="at-shader-layer" aria-hidden="true"><TileShader client:visible /></div>
+  <div class="at-shader-layer" aria-hidden="true"><TileShader client:load /></div>
   <header class="at-head">
     <div class="at-label-row">
       <span class="at-diamond" aria-hidden="true"></span>
@@ -78,13 +78,12 @@ const padded = accounts.length.toString().padStart(3, "0");
     opacity: 0;
     transition: opacity 350ms var(--ease-out-quart);
     pointer-events: none;
-    mix-blend-mode: screen;
   }
   .at-tile > :not(.at-shader-layer) {
     position: relative;
     z-index: 1;
   }
-  @media (hover: hover) and (pointer: fine) {
+  @media (hover: hover) {
     .at-tile:hover {
       border-color: rgba(255, 106, 61, 0.4);
       box-shadow:
@@ -93,12 +92,7 @@ const padded = accounts.length.toString().padStart(3, "0");
         0 0 0 1px rgba(255, 106, 61, 0.16);
     }
     .at-tile:hover .at-shader-layer {
-      opacity: 0.5;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .at-shader-layer {
-      display: none;
+      opacity: 0.7;
     }
   }
   .at-head {

@@ -18,7 +18,7 @@ const {
 
 <article class="cb-tile">
   <div class="cb-shader-layer" aria-hidden="true">
-    <TileShader client:visible />
+    <TileShader client:load />
   </div>
   <header class="cb-head">
     <div class="cb-label-row">
@@ -73,7 +73,9 @@ const {
     transition: box-shadow 280ms var(--ease-out-quart),
                 animation-duration 280ms ease;
   }
-  /* Shader overlay: absolute-positioned Dithering canvas behind tile content. */
+  /* Shader overlay: absolute-positioned Dithering canvas behind tile content.
+     No mix-blend-mode: the dither is rendered with transparent background
+     and rich orange foreground, so a straight overlay reads cleanly. */
   .cb-shader-layer {
     position: absolute;
     inset: 0;
@@ -81,13 +83,12 @@ const {
     opacity: 0;
     transition: opacity 350ms var(--ease-out-quart);
     pointer-events: none;
-    mix-blend-mode: screen;
   }
   .cb-tile > :not(.cb-shader-layer) {
     position: relative;
     z-index: 1;
   }
-  @media (hover: hover) and (pointer: fine) {
+  @media (hover: hover) {
     .cb-tile:hover {
       animation-duration: 2.4s;
       box-shadow:
@@ -96,12 +97,7 @@ const {
         0 0 0 1px rgba(255, 106, 61, 0.18);
     }
     .cb-tile:hover .cb-shader-layer {
-      opacity: 0.45;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .cb-shader-layer {
-      display: none;
+      opacity: 0.7;
     }
   }
   @media (prefers-reduced-motion: reduce) {
