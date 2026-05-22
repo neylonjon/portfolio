@@ -43,13 +43,13 @@ export default function TileShader({
       type="8x8"
       size={1.1}
       scale={1.67}
-      colorBack="#00000000"
+      colorBack="transparent"
       colorFront={colorFront}
+      width="100%"
+      height="100%"
       style={{
         position: "absolute",
         inset: 0,
-        width: "100%",
-        height: "100%",
         pointerEvents: "none",
       }}
     />
