@@ -21,6 +21,10 @@ const DOT_COLOR: Record<string, string> = {
   jonnext: "#D4D4D8",
 };
 
+// Accounts that should NOT be rendered as clickable profile links.
+// Activity still aggregates into the feed; the profile page just isn't surfaced.
+const HIDDEN_PROFILES = new Set(["jonneylon"]);
+
 const padded = accounts.length.toString().padStart(3, "0");
 ---
 
@@ -43,12 +47,16 @@ const padded = accounts.length.toString().padStart(3, "0");
             style={`background:${DOT_COLOR[a] ?? "#D4D4D8"}`}
             aria-hidden="true"
           ></span>
-          <a
-            href={`https://github.com/${a}`}
-            target="_blank"
-            rel="noopener"
-            class="at-name"
-          >{a}</a>
+          {HIDDEN_PROFILES.has(a) ? (
+            <span class="at-name at-name-static">{a}</span>
+          ) : (
+            <a
+              href={`https://github.com/${a}`}
+              target="_blank"
+              rel="noopener"
+              class="at-name"
+            >{a}</a>
+          )}
         </span>
         <span class="at-commits tabular-nums">{COMMIT_ESTIMATES[a] ?? "···"}</span>
       </li>
@@ -164,6 +172,13 @@ const padded = accounts.length.toString().padStart(3, "0");
   }
   .at-name:hover {
     color: var(--color-accent);
+  }
+  .at-name-static {
+    color: var(--color-muted);
+    cursor: default;
+  }
+  .at-name-static:hover {
+    color: var(--color-muted);
   }
   .at-commits {
     font-family: var(--font-mono);
