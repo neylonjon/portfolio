@@ -1,7 +1,37 @@
 @import "tailwindcss";
-@import "@fontsource-variable/inter";
 @import "@fontsource-variable/jetbrains-mono";
-@import "@fontsource-variable/playfair-display";
+
+/* Gosha Sans, self-hosted. Geometric, slightly Soviet-flavored.
+   Used as the sole typeface for display + body. Mono stays separate
+   (ui-monospace) so tabular data keeps its alignment. */
+@font-face {
+  font-family: "Gosha Sans";
+  src: url("/fonts/GoshaSans-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Gosha Sans";
+  src: url("/fonts/GoshaSans-Medium.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Gosha Sans";
+  src: url("/fonts/GoshaSans-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Gosha Sans";
+  src: url("/fonts/GoshaSans-Ultrabold.ttf") format("truetype");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
 
 @theme {
   /* Palette: Axiom dark tactile */
@@ -19,9 +49,9 @@
   --color-accent-yellow: #FFF247;
   --color-cream: #E8E6E3;
 
-  /* Typography */
-  --font-display: "Playfair Display Variable", "Playfair Display", Georgia, serif;
-  --font-sans: "Inter Variable", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  /* Typography. Gosha Sans across display + body. Mono stays system mono. */
+  --font-display: "Gosha Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-sans: "Gosha Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-mono: ui-monospace, "SF Mono", "JetBrains Mono Variable", Menlo, Consolas, monospace;
 
   /* Type scale: Axiom hierarchy */
