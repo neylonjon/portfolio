@@ -3,15 +3,24 @@
 // Right column: Sync stat tile (commits across accounts).
 // Note: the "1,284" commit count is hardcoded for v1. Future wiring lives
 // with Agent C / D (GitHub data feed -> tile).
+import HeroAura from "./HeroAura.astro";
 ---
 
 <section
   id="main"
   class="container-wide"
-  style="display: flex; flex-direction: row; justify-content: space-between; align-items: flex-end; padding: 80px 48px 56px; gap: 56px; flex-wrap: wrap;"
+  style="position: relative; display: flex; flex-direction: row; justify-content: space-between; align-items: flex-end; padding: 80px 48px 56px; gap: 56px; flex-wrap: wrap;"
 >
-  <div style="max-width: 820px; flex-grow: 1; display: flex; flex-direction: column; gap: 24px;">
-    <div class="reveal" style="--reveal-delay: 0ms; display: flex; flex-direction: row; align-items: center; gap: 12px;">
+  <div
+    class="hero-headline-col"
+    style="position: relative; max-width: 820px; flex-grow: 1; display: flex; flex-direction: column; gap: 24px;"
+  >
+    <HeroAura />
+
+    <div
+      class="reveal"
+      style="position: relative; z-index: 1; --reveal-delay: 0ms; display: flex; flex-direction: row; align-items: center; gap: 12px;"
+    >
       <span
         aria-hidden="true"
         style="width: 8px; height: 8px; border-radius: 9999px; background: var(--color-accent, #FF6A3D); flex-shrink: 0;"
@@ -24,15 +33,15 @@
     </div>
 
     <h1
-      class="reveal"
-      style="--reveal-delay: 100ms; font-family: var(--font-display, 'Playfair Display Variable', 'Playfair Display', Georgia, serif); font-weight: 400; font-size: 76px; letter-spacing: -0.025em; line-height: 80px; color: var(--color-fg, #D4D4D8); margin: 0;"
+      data-hero-headline
+      style="position: relative; z-index: 1; font-family: var(--font-display, 'Playfair Display Variable', 'Playfair Display', Georgia, serif); font-weight: 400; font-size: 76px; letter-spacing: -0.025em; line-height: 80px; color: var(--color-fg, #D4D4D8); margin: 0;"
     >
-      Hey. I'm Jon. Founding design engineer at NextWork.
+      Hey. I'm Jon. Founding design engineer at <span data-scramble>NextWork</span>.
     </h1>
 
     <p
       class="mono reveal"
-      style="--reveal-delay: 200ms; font-family: var(--font-mono, ui-monospace, 'SF Mono', 'JetBrains Mono Variable', monospace); font-weight: 400; font-size: 11px; letter-spacing: 0.025em; line-height: 19.8px; text-transform: uppercase; color: var(--color-muted, #71717A); max-width: 640px; margin: 0;"
+      style="position: relative; z-index: 1; --reveal-delay: 200ms; font-family: var(--font-mono, ui-monospace, 'SF Mono', 'JetBrains Mono Variable', monospace); font-weight: 400; font-size: 11px; letter-spacing: 0.025em; line-height: 19.8px; text-transform: uppercase; color: var(--color-muted, #71717A); max-width: 640px; margin: 0;"
     >
       Rethinking how we learn online. Design + code + AI agents. Vibe-coding daily from Austin. Below: what I touched today, live, not curated.
     </p>
@@ -41,7 +50,7 @@
   <aside
     aria-label="Sync stats"
     class="reveal"
-    style="--reveal-delay: 300ms; width: 280px; flex-shrink: 0; background: var(--color-bg-elevated, #1A1A1A); border: 1px solid var(--color-hairline, #27272A); padding: 24px 26px; box-shadow: 0 0 40px rgba(255, 106, 61, 0.08);"
+    style="position: relative; z-index: 1; --reveal-delay: 300ms; width: 280px; flex-shrink: 0; background: var(--color-bg-elevated, #1A1A1A); border: 1px solid var(--color-hairline, #27272A); padding: 24px 26px; box-shadow: 0 0 40px rgba(255, 106, 61, 0.08);"
   >
     <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between; gap: 12px;">
       <span
@@ -78,3 +87,156 @@
     </p>
   </aside>
 </section>
+
+<script>
+  // Hero headline entrance + persistent micro-motion.
+  // Splits the H1 into per-char spans with split-type, then runs a GSAP
+  // timeline. Respects prefers-reduced-motion. Hover wave is scoped to
+  // hover-capable pointer-fine devices.
+  import { gsap } from "gsap";
+  import SplitType from "split-type";
+
+  const ready = () => {
+    const headline = document.querySelector<HTMLElement>("[data-hero-headline]");
+    if (!headline) return;
+
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    // Split into chars. split-type wraps each char in a span with class
+    // .char (and each word in .word). Preserves spaces.
+    const split = new SplitType(headline, {
+      types: "chars,words",
+      tagName: "span",
+    });
+
+    const chars = split.chars ?? [];
+
+    if (reduceMotion) {
+      // Single frame, no entrance, no hover wave, no scramble.
+      // Make sure chars are visible immediately.
+      gsap.set(chars, { opacity: 1, y: 0, rotationX: 0 });
+      return;
+    }
+
+    // Set transform-origin once so the rotateX feels grounded.
+    gsap.set(chars, {
+      transformOrigin: "0% 100%",
+      transformPerspective: 600,
+      display: "inline-block",
+      willChange: "transform, opacity",
+    });
+
+    // Entrance timeline.
+    const tl = gsap.timeline({
+      defaults: { ease: "expo.out" },
+      onComplete: () => {
+        // Drop will-change once the entrance is done so we don't keep a
+        // promotion hint hot for the whole session.
+        gsap.set(chars, { willChange: "auto" });
+      },
+    });
+
+    tl.from(chars, {
+      opacity: 0,
+      yPercent: 60,
+      rotationX: -50,
+      duration: 0.8,
+      stagger: 0.018,
+    });
+
+    // Late micro-bump: color words from muted to fg over the tail of the
+    // entrance. Targets all words via split-type's .word class.
+    const words = split.words ?? [];
+    if (words.length > 0) {
+      tl.fromTo(
+        words,
+        { color: "var(--color-muted, #71717A)" },
+        {
+          color: "var(--color-fg, #D4D4D8)",
+          duration: 0.6,
+          stagger: 0.02,
+          ease: "power1.out",
+        },
+        "-=0.5"
+      );
+    }
+
+    // Scramble effect on the "NextWork" word.
+    const scrambleTarget = headline.querySelector<HTMLElement>(
+      "[data-scramble]"
+    );
+    if (scrambleTarget) {
+      // split-type ran on the headline before we read this, so the original
+      // text content is already wrapped in .char spans inside scrambleTarget.
+      const scrambleChars = Array.from(
+        scrambleTarget.querySelectorAll<HTMLElement>(".char")
+      );
+      const finalText = scrambleChars.map((c) => c.textContent ?? "");
+      const pool = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+      const runScramble = () => {
+        const start = performance.now();
+        const duration = 400;
+        let frame: number;
+        const step = (now: number) => {
+          const elapsed = now - start;
+          const progress = Math.min(elapsed / duration, 1);
+          scrambleChars.forEach((node, i) => {
+            // Resolve characters left-to-right.
+            const resolveAt = i / scrambleChars.length;
+            if (progress >= resolveAt) {
+              node.textContent = finalText[i];
+            } else {
+              node.textContent = pool[Math.floor(Math.random() * pool.length)];
+            }
+          });
+          if (progress < 1) {
+            frame = requestAnimationFrame(step);
+          } else {
+            scrambleChars.forEach((node, i) => {
+              node.textContent = finalText[i];
+            });
+            cancelAnimationFrame(frame);
+          }
+        };
+        requestAnimationFrame(step);
+      };
+
+      // Trigger scramble after the entrance completes.
+      tl.call(runScramble, [], "+=0.05");
+    }
+
+    // Persistent micro-motion: hover wave. Hover-capable devices only.
+    const hoverCapable = window.matchMedia(
+      "(hover: hover) and (pointer: fine)"
+    ).matches;
+
+    if (hoverCapable) {
+      let lastTrigger = 0;
+      const THROTTLE_MS = 800;
+
+      headline.addEventListener("mouseenter", () => {
+        const now = performance.now();
+        if (now - lastTrigger < THROTTLE_MS) return;
+        lastTrigger = now;
+
+        gsap.to(chars, {
+          y: -3,
+          duration: 0.18,
+          ease: "sine.out",
+          stagger: { each: 0.012, from: "start" },
+          yoyo: true,
+          repeat: 1,
+        });
+      });
+    }
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", ready, { once: true });
+  } else {
+    ready();
+  }
+</script>
