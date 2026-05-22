@@ -1,4 +1,6 @@
 ---
+import TileShader from "./TileShader.tsx";
+
 interface Props {
   headline?: string;
   sub?: string;
@@ -15,6 +17,9 @@ const {
 ---
 
 <article class="cb-tile">
+  <div class="cb-shader-layer" aria-hidden="true">
+    <TileShader client:visible />
+  </div>
   <header class="cb-head">
     <div class="cb-label-row">
       <span class="cb-diamond" aria-hidden="true"></span>
@@ -42,6 +47,7 @@ const {
      the ring. The angle animates via @property so the bright orange "beam"
      orbits the perimeter. */
   .cb-tile {
+    position: relative;
     background:
       linear-gradient(var(--color-bg-elevated), var(--color-bg-elevated)) padding-box,
       conic-gradient(
@@ -61,10 +67,25 @@ const {
     flex-direction: column;
     width: 100%;
     height: 100%;
+    overflow: hidden;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 60px rgba(255, 106, 61, 0.06);
     animation: cb-rotate-border 8s linear infinite;
     transition: box-shadow 280ms var(--ease-out-quart),
                 animation-duration 280ms ease;
+  }
+  /* Shader overlay: absolute-positioned Dithering canvas behind tile content. */
+  .cb-shader-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    opacity: 0;
+    transition: opacity 350ms var(--ease-out-quart);
+    pointer-events: none;
+    mix-blend-mode: screen;
+  }
+  .cb-tile > :not(.cb-shader-layer) {
+    position: relative;
+    z-index: 1;
   }
   @media (hover: hover) and (pointer: fine) {
     .cb-tile:hover {
@@ -73,6 +94,14 @@ const {
         0 24px 48px rgba(0, 0, 0, 0.45),
         0 0 80px rgba(255, 106, 61, 0.22),
         0 0 0 1px rgba(255, 106, 61, 0.18);
+    }
+    .cb-tile:hover .cb-shader-layer {
+      opacity: 0.45;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cb-shader-layer {
+      display: none;
     }
   }
   @media (prefers-reduced-motion: reduce) {

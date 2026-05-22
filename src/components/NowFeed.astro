@@ -5,6 +5,7 @@ import CommitsTicker from "./CommitsTicker.astro";
 import CurrentlyBuilding from "./CurrentlyBuilding.astro";
 import AccountsTile from "./AccountsTile.astro";
 import StatusTile from "./StatusTile.astro";
+import TileShader from "./TileShader.tsx";
 
 interface Props {
   data: GitHubData;
@@ -36,6 +37,7 @@ const refreshedAgo = formatSync(data.syncedAt);
 
     {/* LIVE COMMIT STREAM tile (tall, right) */}
     <div class="tile tile-stream tile-hover reveal" style="--reveal-delay: 80ms;">
+      <div class="tile-shader-layer" aria-hidden="true"><TileShader client:visible /></div>
       <header class="stream-head">
         <div class="stream-label-row">
           <span class="diamond" aria-hidden="true"></span>
@@ -69,6 +71,7 @@ const refreshedAgo = formatSync(data.syncedAt);
 
     {/* CADENCE tile (bottom-left) */}
     <div class="tile tile-cadence tile-hover reveal" style="--reveal-delay: 160ms;">
+      <div class="tile-shader-layer" aria-hidden="true"><TileShader client:visible /></div>
       <header class="card-head">
         <div class="label-row">
           <span class="diamond" aria-hidden="true"></span>
@@ -152,49 +155,62 @@ const refreshedAgo = formatSync(data.syncedAt);
     top: 30px;
     width: 512px;
     height: 720px;
-    background:
-      linear-gradient(var(--color-bg-elevated), var(--color-bg-elevated)) padding-box,
-      linear-gradient(var(--color-hairline), var(--color-hairline)) border-box;
-    border: 1px solid transparent;
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-hairline);
     display: flex;
     flex-direction: column;
     padding: 28px 0 16px;
-    transition: box-shadow 280ms var(--ease-out-quart);
+    overflow: hidden;
+    transition: box-shadow 280ms var(--ease-out-quart),
+                border-color 280ms var(--ease-out-quart);
   }
   .tile-cadence {
     left: 60px;
     top: 410px;
     width: 360px;
     height: 220px;
-    background:
-      linear-gradient(var(--color-bg-elevated), var(--color-bg-elevated)) padding-box,
-      linear-gradient(var(--color-hairline), var(--color-hairline)) border-box;
-    border: 1px solid transparent;
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-hairline);
     padding: 24px;
     display: flex;
     flex-direction: column;
-    transition: box-shadow 280ms var(--ease-out-quart);
+    overflow: hidden;
+    transition: box-shadow 280ms var(--ease-out-quart),
+                border-color 280ms var(--ease-out-quart);
+  }
+  /* Paper Shader overlay layer (Dithering canvas). Idle: invisible.
+     Hover: fades in via blend mode for the dithered orange wash. */
+  .tile-shader-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    opacity: 0;
+    transition: opacity 350ms var(--ease-out-quart);
+    pointer-events: none;
+    mix-blend-mode: screen;
+  }
+  .tile-stream > :not(.tile-shader-layer),
+  .tile-cadence > :not(.tile-shader-layer) {
+    position: relative;
+    z-index: 1;
   }
   @media (hover: hover) and (pointer: fine) {
     .tile-stream:hover,
     .tile-cadence:hover {
-      background:
-        linear-gradient(var(--color-bg-elevated), var(--color-bg-elevated)) padding-box,
-        conic-gradient(
-          from var(--tile-border-angle),
-          var(--color-hairline) 0%,
-          var(--color-hairline) 38%,
-          rgba(255, 106, 61, 0.55) 46%,
-          var(--color-accent) 50%,
-          rgba(255, 106, 61, 0.55) 54%,
-          var(--color-hairline) 62%,
-          var(--color-hairline) 100%
-        ) border-box;
-      animation: tile-rotate-border 3s linear infinite;
+      border-color: rgba(255, 106, 61, 0.4);
       box-shadow:
         0 24px 48px rgba(0, 0, 0, 0.45),
         0 0 60px rgba(255, 106, 61, 0.20),
         0 0 0 1px rgba(255, 106, 61, 0.16);
+    }
+    .tile-stream:hover .tile-shader-layer,
+    .tile-cadence:hover .tile-shader-layer {
+      opacity: 0.5;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tile-shader-layer {
+      display: none;
     }
   }
   .tile-accounts {
