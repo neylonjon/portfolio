@@ -48,5 +48,73 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
   <body>
     <a href="#main" class="skip-link">Skip to content</a>
     <slot />
+
+    <script>
+      // Reveal-on-enter: IntersectionObserver flips elements with .reveal to .is-visible
+      // once they cross 12% into the viewport. Unobserves after first reveal so it doesn't
+      // replay on scroll back. Respects prefers-reduced-motion by skipping the dance entirely.
+      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const targets = document.querySelectorAll<HTMLElement>(".reveal");
+
+      if (reduced) {
+        targets.forEach((el) => el.classList.add("is-visible"));
+      } else if ("IntersectionObserver" in window) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("is-visible");
+                io.unobserve(entry.target);
+              }
+            });
+          },
+          { rootMargin: "0px 0px -12% 0px", threshold: 0.05 }
+        );
+        targets.forEach((el) => io.observe(el));
+      } else {
+        targets.forEach((el) => el.classList.add("is-visible"));
+      }
+
+      // Sync counter: counts up from 0 to the data-target value once the element
+      // becomes visible. tabular-nums + hardcoded width prevent layout shift.
+      const counters = document.querySelectorAll<HTMLElement>("[data-counter]");
+      counters.forEach((el) => {
+        const target = Number(el.dataset.counter ?? "0");
+        if (!target || reduced) {
+          el.textContent = target.toLocaleString();
+          return;
+        }
+        const duration = 1200;
+        let started = false;
+        const run = () => {
+          if (started) return;
+          started = true;
+          const start = performance.now();
+          const tick = (now: number) => {
+            const t = Math.min(1, (now - start) / duration);
+            // ease-out-quart
+            const eased = 1 - Math.pow(1 - t, 4);
+            const value = Math.round(target * eased);
+            el.textContent = value.toLocaleString();
+            if (t < 1) requestAnimationFrame(tick);
+          };
+          requestAnimationFrame(tick);
+        };
+        if ("IntersectionObserver" in window) {
+          const co = new IntersectionObserver(
+            (entries) => {
+              if (entries.some((e) => e.isIntersecting)) {
+                run();
+                co.disconnect();
+              }
+            },
+            { threshold: 0.4 }
+          );
+          co.observe(el);
+        } else {
+          run();
+        }
+      });
+    </script>
   </body>
 </html>

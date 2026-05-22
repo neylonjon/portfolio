@@ -49,6 +49,11 @@
   /* Layout */
   --content-max: 720px;
   --content-wide: 1440px;
+
+  /* Motion: easing tokens per Emil */
+  --ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
+  --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+  --ease-in-out-quart: cubic-bezier(0.77, 0, 0.175, 1);
 }
 
 @layer base {
@@ -213,6 +218,61 @@
     background: var(--color-accent);
     box-shadow: 0 0 0 4px var(--color-accent-halo);
     flex-shrink: 0;
+    animation: pulse-halo 2.4s var(--ease-in-out-quart) infinite;
+    transform: translateZ(0);
+    will-change: box-shadow;
+  }
+
+  /* Reveal-on-enter pattern. Element starts translated + faded;
+     IntersectionObserver in Layout.astro flips to .is-visible. */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px) translateZ(0);
+    transition:
+      opacity 600ms var(--ease-out-quart),
+      transform 600ms var(--ease-out-quart);
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, transform;
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0) translateZ(0);
+  }
+
+
+  /* Card hover lift, hover-capable devices only. */
+  .tile-hover {
+    transition: transform 200ms ease, box-shadow 200ms ease;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .tile-hover:hover {
+      transform: translateY(-2px);
+    }
+  }
+
+  /* Notched cream button: scale on active for tactile feedback. */
+  .btn-cream:active {
+    transform: scale(0.98);
+  }
+}
+
+@keyframes pulse-halo {
+  0%, 100% {
+    box-shadow: 0 0 0 4px var(--color-accent-halo);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(255, 106, 61, 0.06);
+  }
+}
+
+@keyframes settle-rotate {
+  from {
+    transform: rotate(0deg);
+    opacity: 0;
+  }
+  to {
+    transform: rotate(-3deg);
+    opacity: 1;
   }
 }
 

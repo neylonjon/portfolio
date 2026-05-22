@@ -30,12 +30,12 @@ const refreshedAgo = formatSync(data.syncedAt);
 <section id="now" class="container-wide now-section">
   <div class="now-canvas">
     {/* CURRENTLY BUILDING tile (rotated big tile, top-left) */}
-    <div class="tile tile-cb">
+    <div class="tile tile-cb tile-hover reveal" style="--reveal-delay: 0ms;">
       <CurrentlyBuilding />
     </div>
 
     {/* LIVE COMMIT STREAM tile (tall, right) */}
-    <div class="tile tile-stream">
+    <div class="tile tile-stream tile-hover reveal" style="--reveal-delay: 80ms;">
       <header class="stream-head">
         <div class="stream-label-row">
           <span class="diamond" aria-hidden="true"></span>
@@ -68,7 +68,7 @@ const refreshedAgo = formatSync(data.syncedAt);
     </div>
 
     {/* CADENCE tile (bottom-left) */}
-    <div class="tile tile-cadence">
+    <div class="tile tile-cadence tile-hover reveal" style="--reveal-delay: 160ms;">
       <header class="card-head">
         <div class="label-row">
           <span class="diamond" aria-hidden="true"></span>
@@ -92,12 +92,12 @@ const refreshedAgo = formatSync(data.syncedAt);
     </div>
 
     {/* ACCOUNTS LINKED tile (bottom-middle) */}
-    <div class="tile tile-accounts">
+    <div class="tile tile-accounts tile-hover reveal" style="--reveal-delay: 240ms;">
       <AccountsTile accounts={data.accounts} />
     </div>
 
     {/* STATUS pill (wide, bottom) */}
-    <div class="tile tile-status">
+    <div class="tile tile-status reveal" style="--reveal-delay: 320ms;">
       <StatusTile />
     </div>
   </div>
@@ -129,6 +129,23 @@ const refreshedAgo = formatSync(data.syncedAt);
     height: 320px;
     transform: rotate(-3deg);
     transform-origin: 50% 50%;
+  }
+  /* Reveal override: tile-cb's rotation is preserved through the reveal
+     sequence by starting at 0deg and settling to -3deg in tandem with the
+     translateY entrance. Otherwise .reveal's transform would erase the
+     rotation. */
+  .tile-cb.reveal {
+    transform: translateY(20px) rotate(0deg) translateZ(0);
+  }
+  .tile-cb.reveal.is-visible {
+    transform: translateY(0) rotate(-3deg) translateZ(0);
+    transition-duration: 900ms;
+    transition-timing-function: var(--ease-out-expo);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .tile-cb.tile-hover:hover {
+      transform: translateY(-2px) rotate(-2.5deg) translateZ(0);
+    }
   }
   .tile-stream {
     left: 880px;
