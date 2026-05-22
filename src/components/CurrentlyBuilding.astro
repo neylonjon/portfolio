@@ -80,9 +80,13 @@ const {
     position: absolute;
     inset: 0;
     z-index: 0;
-    /* DEBUG: temporarily always visible to confirm shader is rendering.
-       Revert to opacity: 0 + hover trigger once the visual is confirmed. */
-    opacity: 0.5;
+    /* DEBUG: solid orange tint on the layer so we can verify the layer
+       itself is rendering at the right position/size. If you see an
+       orange wash on the CurrentlyBuilding tile after this deploy, the
+       layer + positioning are fine and the Dithering shader is broken.
+       If still nothing, the layer is not rendering. */
+    opacity: 1;
+    background: rgba(255, 106, 61, 0.3);
     transition: opacity 350ms var(--ease-out-quart);
     pointer-events: none;
   }
