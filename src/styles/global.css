@@ -329,7 +329,7 @@
   50% { --hair-sweep-pos: 130%; }
 }
 
-/* Rotating conic-gradient border angle for CurrentlyBuilding tile. */
+/* Rotating conic-gradient border angle for CurrentlyBuilding tile (always-on). */
 @property --cb-border-angle {
   syntax: "<angle>";
   inherits: false;
@@ -338,6 +338,17 @@
 
 @keyframes cb-rotate-border {
   to { --cb-border-angle: 360deg; }
+}
+
+/* Shared rotating border angle for hover-only rotors on the other tiles. */
+@property --tile-border-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes tile-rotate-border {
+  to { --tile-border-angle: 360deg; }
 }
 
 @keyframes pulse-halo {
