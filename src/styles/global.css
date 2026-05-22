@@ -329,6 +329,17 @@
   50% { --hair-sweep-pos: 130%; }
 }
 
+/* Rotating conic-gradient border angle for CurrentlyBuilding tile. */
+@property --cb-border-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes cb-rotate-border {
+  to { --cb-border-angle: 360deg; }
+}
+
 @keyframes pulse-halo {
   0%, 100% {
     box-shadow: 0 0 0 4px var(--color-accent-halo);
