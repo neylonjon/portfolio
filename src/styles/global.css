@@ -254,6 +254,49 @@
   .btn-cream:active {
     transform: scale(0.98);
   }
+
+  /* Animated hairline sweep. A soft orange beam travels across the
+     hairline every few seconds. Inspired by Florian Kiem's gradient-
+     border technique: @property + keyframes drive an interpolatable
+     custom prop, which browsers can animate smoothly.
+     Apply to elements that already have .hairline or .hairline-b. */
+  .hairline-sweep {
+    position: relative;
+  }
+  .hairline-sweep::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent calc(var(--hair-sweep-pos) - 18%),
+      rgba(255, 106, 61, 0.75) var(--hair-sweep-pos),
+      transparent calc(var(--hair-sweep-pos) + 18%)
+    );
+    pointer-events: none;
+    animation: hair-sweep 7s linear infinite;
+    animation-delay: var(--hair-sweep-delay, 0s);
+  }
+  /* Variant for elements where the rule sits at the top (e.g. footer
+     border-top, signal section border-top). */
+  .hairline-sweep-top::after {
+    bottom: auto;
+    top: -1px;
+  }
+}
+
+@property --hair-sweep-pos {
+  syntax: "<percentage>";
+  inherits: true;
+  initial-value: -30%;
+}
+
+@keyframes hair-sweep {
+  0%, 100% { --hair-sweep-pos: -30%; }
+  50% { --hair-sweep-pos: 130%; }
 }
 
 @keyframes pulse-halo {
