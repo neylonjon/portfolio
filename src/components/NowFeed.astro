@@ -2,6 +2,9 @@
 import type { GitHubData } from "../lib/github";
 import ContributionGraph from "./ContributionGraph.astro";
 import CommitsTicker from "./CommitsTicker.astro";
+import CurrentlyBuilding from "./CurrentlyBuilding.astro";
+import AccountsTile from "./AccountsTile.astro";
+import StatusTile from "./StatusTile.astro";
 
 interface Props {
   data: GitHubData;
@@ -12,72 +15,305 @@ function formatSync(iso: string) {
   const diff = Date.now() - new Date(iso).getTime();
   const min = Math.floor(diff / 60000);
   if (min < 1) return "just now";
-  if (min < 60) return `${min}m ago`;
+  if (min < 60) return `${min}m`;
   const hr = Math.floor(min / 60);
-  return `${hr}h ago`;
+  if (hr < 24) return `${hr}h`;
+  const d = Math.floor(hr / 24);
+  return `${d}d`;
 }
+
+const totalCadence = data.totalContributions > 0 ? data.totalContributions.toLocaleString() : "0";
+const commitCount = data.commits.length;
+const refreshedAgo = formatSync(data.syncedAt);
 ---
 
-<section id="now" class="container-wide py-12 md:py-16 hairline-b">
-  <header class="flex items-baseline justify-between mb-8 gap-4 flex-wrap">
-    <span class="section-label">now</span>
-    <span class="mono text-[11px] text-[color:var(--color-faint)] tabular-nums">
-      {data.source === "live" ? "live" : "cached"} · {data.accounts.length} account{data.accounts.length === 1 ? "" : "s"} · synced {formatSync(data.syncedAt)}
-    </span>
-  </header>
-  {data.accounts.length > 0 && (
-    <p class="mono text-[10px] text-[color:var(--color-faint)] mb-6 tracking-[0.06em]" aria-label="Tracked GitHub accounts">
-      {data.accounts.map((a, i) => (
-        <>
-          <a href={`https://github.com/${a}`} target="_blank" rel="noopener" class="!border-none hover:text-[color:var(--color-accent)]">@{a}</a>
-          {i < data.accounts.length - 1 && <span class="text-[color:var(--color-faint)]"> · </span>}
-        </>
-      ))}
-    </p>
-  )}
-
-  <div class="now-grid">
-    <div class="commits-pane">
-      <h2 class="mono text-[11px] uppercase tracking-[0.12em] text-[color:var(--color-muted)] mb-3">
-        latest commits
-      </h2>
-      {data.commits.length === 0 ? (
-        <p class="empty-state mono">
-          awaiting first sync. github token not yet configured.
-        </p>
-      ) : (
-        <CommitsTicker commits={data.commits} />
-      )}
+<section id="now" class="container-wide now-section">
+  <div class="now-canvas">
+    {/* CURRENTLY BUILDING tile (rotated big tile, top-left) */}
+    <div class="tile tile-cb">
+      <CurrentlyBuilding />
     </div>
 
-    <div class="graph-pane">
-      <h2 class="mono text-[11px] uppercase tracking-[0.12em] text-[color:var(--color-muted)] mb-3">
-        cadence · 26w
-      </h2>
-      <ContributionGraph weeks={data.contributions} total={data.totalContributions} />
+    {/* LIVE COMMIT STREAM tile (tall, right) */}
+    <div class="tile tile-stream">
+      <header class="stream-head">
+        <div class="stream-label-row">
+          <span class="diamond" aria-hidden="true"></span>
+          <span class="stream-label">LIVE COMMIT STREAM</span>
+        </div>
+        <span class="stream-refresh mono">↻ {refreshedAgo}</span>
+      </header>
+
+      <div class="stream-body">
+        {commitCount === 0 ? (
+          <p class="stream-empty mono">
+            AWAITING FIRST SYNC. GITHUB TOKEN NOT YET CONFIGURED.
+          </p>
+        ) : (
+          <CommitsTicker commits={data.commits} />
+        )}
+      </div>
+
+      <footer class="stream-foot">
+        <span class="stream-foot-left mono">
+          {commitCount} COMMIT{commitCount === 1 ? "" : "S"} · TODAY
+        </span>
+        <a
+          href="https://github.com/jonneylon"
+          target="_blank"
+          rel="noopener"
+          class="stream-foot-right mono"
+        >VIEW ALL →</a>
+      </footer>
+    </div>
+
+    {/* CADENCE tile (bottom-left) */}
+    <div class="tile tile-cadence">
+      <header class="card-head">
+        <div class="label-row">
+          <span class="diamond" aria-hidden="true"></span>
+          <span class="card-label">CADENCE · 12W</span>
+        </div>
+        <span class="card-meta mono accent">+18%</span>
+      </header>
+
+      <div class="cadence-body">
+        <ContributionGraph
+          weeks={data.contributions}
+          total={data.totalContributions}
+          rangeWeeks={12}
+        />
+      </div>
+
+      <footer class="cadence-foot">
+        <span class="cadence-total">{totalCadence}</span>
+        <span class="cadence-streak mono">STREAK · 48D</span>
+      </footer>
+    </div>
+
+    {/* ACCOUNTS LINKED tile (bottom-middle) */}
+    <div class="tile tile-accounts">
+      <AccountsTile accounts={data.accounts} />
+    </div>
+
+    {/* STATUS pill (wide, bottom) */}
+    <div class="tile tile-status">
+      <StatusTile />
     </div>
   </div>
 </section>
 
 <style>
-  .now-grid {
-    display: grid;
-    grid-template-columns: 1.4fr 1fr;
-    gap: 3.5rem;
-    align-items: start;
+  .now-section {
+    padding: 48px 0 64px;
   }
-  .empty-state {
-    font-size: 12px;
-    color: var(--color-faint);
-    border-top: 1px solid var(--color-hairline);
-    border-bottom: 1px solid var(--color-hairline);
-    padding: 14px 0;
+
+  /* Desktop topology canvas */
+  .now-canvas {
+    position: relative;
+    width: 100%;
+    max-width: 1440px;
+    height: 780px;
+    margin: 0 auto;
+    padding: 0 48px;
+  }
+
+  .tile {
+    position: absolute;
+  }
+
+  .tile-cb {
+    left: 60px;
+    top: 30px;
+    width: 480px;
+    height: 320px;
+    transform: rotate(-3deg);
+    transform-origin: 50% 50%;
+  }
+  .tile-stream {
+    left: 880px;
+    top: 30px;
+    width: 512px;
+    height: 720px;
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-hairline);
+    display: flex;
+    flex-direction: column;
+    padding: 28px 0 16px;
+  }
+  .tile-cadence {
+    left: 60px;
+    top: 410px;
+    width: 360px;
+    height: 220px;
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-hairline);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+  }
+  .tile-accounts {
+    left: 460px;
+    top: 410px;
+    width: 360px;
+    height: 220px;
+  }
+  .tile-status {
+    left: 60px;
+    top: 660px;
+    width: 760px;
+    height: 96px;
+  }
+
+  /* Shared bits */
+  .diamond {
+    width: 8px;
+    height: 8px;
+    background: var(--color-accent);
+    transform: rotate(45deg);
+    display: inline-block;
+  }
+  .label-row,
+  .stream-label-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .stream-label,
+  .card-label {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+  .card-meta.accent {
+    color: var(--color-accent);
+    font-size: 11px;
     letter-spacing: 0.04em;
   }
+
+  /* Stream tile internals */
+  .stream-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px 18px;
+    border-bottom: 1px solid var(--color-hairline);
+  }
+  .stream-refresh {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+  .stream-body {
+    flex-grow: 1;
+    overflow: hidden;
+  }
+  .stream-empty {
+    padding: 28px;
+    font-size: 11px;
+    letter-spacing: 0.025em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+  .stream-foot {
+    border-top: 1px solid var(--color-hairline);
+    padding: 16px 28px;
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .stream-foot-left {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+  .stream-foot-right {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    text-decoration: none;
+    border: none;
+    transition: opacity 160ms ease;
+  }
+  .stream-foot-right:hover {
+    opacity: 0.7;
+  }
+
+  /* Cadence tile internals */
+  .card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .cadence-body {
+    margin-top: 14px;
+    flex-grow: 1;
+    overflow: hidden;
+  }
+  .cadence-foot {
+    margin-top: auto;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+  .cadence-total {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 26px;
+    letter-spacing: -0.015em;
+    color: var(--color-fg);
+    line-height: 1;
+  }
+  .cadence-streak {
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  /* Mobile: stack tiles vertically, no absolute positioning */
   @media (max-width: 900px) {
-    .now-grid {
-      grid-template-columns: 1fr;
-      gap: 2.5rem;
+    .now-section {
+      padding: 32px 0 48px;
+    }
+    .now-canvas {
+      position: static;
+      height: auto;
+      padding: 0 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .tile {
+      position: static;
+      width: 100%;
+      height: auto;
+    }
+    .tile-cb {
+      transform: rotate(-1.5deg);
+      max-width: 100%;
+    }
+    .tile-stream {
+      height: auto;
+      min-height: 480px;
+    }
+    .tile-cadence {
+      height: auto;
+      min-height: 220px;
+    }
+    .tile-accounts {
+      height: auto;
+      min-height: 220px;
+    }
+    .tile-status {
+      height: auto;
     }
   }
 </style>

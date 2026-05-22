@@ -3,7 +3,7 @@ import { Resvg } from "@resvg/resvg-js";
 
 const svg = readFileSync(new URL("../public/og.svg", import.meta.url));
 const resvg = new Resvg(svg, {
-  background: "#FAFAF7",
+  background: "#111111",
   fitTo: { mode: "width", value: 1200 },
   font: {
     loadSystemFonts: true,

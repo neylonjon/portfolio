@@ -1,15 +1,38 @@
 ---
-const year = new Date().getFullYear();
+const buildVersion = "V0.2.0";
+const buildDate = new Date().toISOString().slice(0, 10);
 ---
 
 <footer class="hairline mt-24">
-  <div class="container-wide py-10 flex flex-col sm:flex-row items-baseline justify-between gap-4 text-[12px] text-[color:var(--color-muted)]">
-    <p>
-      &copy; {year} Jon Neylon · Wellington, NZ
+  <div
+    class="flex flex-col sm:flex-row items-center justify-between gap-4"
+    style="padding: 24px 48px 36px;"
+  >
+    <p
+      class="mono flex items-center gap-3"
+      style="font-size: 10px; letter-spacing: 0.1em; color: var(--color-muted);"
+    >
+      <span
+        aria-hidden="true"
+        style="display: inline-block; width: 10px; height: 10px; background: var(--color-accent); transform: rotate(45deg);"
+      ></span>
+      <span>© 2026 JON NEYLON · WELLINGTON, NZ · NZST</span>
     </p>
-    <p class="mono text-[11px] text-[color:var(--color-faint)]">
-      built with astro, deployed on vercel
-      <span aria-hidden="true" class="ml-2">✿</span>
+
+    <p
+      class="mono tabular-nums"
+      style="font-size: 10px; letter-spacing: 0.1em; color: var(--color-muted);"
+      aria-label={`Build ${buildVersion} dated ${buildDate}`}
+    >
+      {buildVersion} · {buildDate}
     </p>
+
+    <a
+      href="#main"
+      class="!border-none"
+      style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 8px 14px; border: 1px solid var(--color-hairline) !important; border-radius: 9999px; font-family: var(--font-sans); font-weight: 500; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-fg); text-decoration: none;"
+    >
+      <span aria-hidden="true">↑</span> TOP
+    </a>
   </div>
 </footer>

@@ -12,19 +12,19 @@ export const DEFAULTS = {
   /** Cell size in pixels (smaller = denser dots) */
   gridSize: 14,
   /** Max dot radius as fraction of the cell (0..0.5) */
-  baseRadius: 0.32,
-  /** Min radius even when activity is 0 — keeps texture present */
-  minRadius: 0.08,
+  baseRadius: 0.30,
+  /** Min radius even when activity is 0, keeps texture present */
+  minRadius: 0.06,
   /** Animation speed for the noise field (0 = static) */
   noiseSpeed: 0.04,
   /** How strongly the contribution grid pulls the dot size up */
   activityGain: 0.55,
   /** Overall mix of shader over background (0 = invisible, 1 = solid) */
-  opacity: 0.22,
-  /** Dot color (RGB triplet, 0..1) — defaults to the forest accent */
-  tint: [0.122, 0.302, 0.247] as [number, number, number],
-  /** Background tint (RGB triplet, 0..1) — defaults to off-white */
-  background: [0.98, 0.98, 0.969] as [number, number, number],
+  opacity: 0.32,
+  /** Dot color (RGB triplet, 0..1), defaults to the orange accent #FF6A3D */
+  tint: [1.0, 0.416, 0.239] as [number, number, number],
+  /** Background tint (RGB triplet, 0..1), defaults to #111111 */
+  background: [0.067, 0.067, 0.067] as [number, number, number],
 };
 
 export type HalftoneOptions = Partial<typeof DEFAULTS> & {

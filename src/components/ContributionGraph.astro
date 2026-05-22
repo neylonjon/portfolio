@@ -4,21 +4,24 @@ import type { ContributionWeek } from "../lib/github";
 interface Props {
   weeks: ContributionWeek[];
   total: number;
+  rangeWeeks?: number;
 }
 
-const { weeks, total } = Astro.props;
+const { weeks, total, rangeWeeks = 12 } = Astro.props;
 
-// 5 opacity steps mapped against the forest accent
+// 5 opacity steps mapped against the warm orange accent.
+// Level 0 is a tinted not-pure-black so the grid stays visible on dark bg.
 const LEVEL_BG: Record<number, string> = {
-  0: "rgba(0,0,0,0.045)",
-  1: "rgba(31,77,63,0.22)",
-  2: "rgba(31,77,63,0.42)",
-  3: "rgba(31,77,63,0.65)",
-  4: "rgba(31,77,63,0.90)",
+  0: "rgba(255,106,61,0.06)",
+  1: "rgba(255,106,61,0.18)",
+  2: "rgba(255,106,61,0.40)",
+  3: "rgba(255,106,61,0.65)",
+  4: "#FF6A3D",
 };
 
-// Trim to last 26 weeks (desktop). Mobile CSS clips visually to last 12.
-const trimmed = weeks.slice(-26);
+const YELLOW_THRESHOLD = 15;
+
+const trimmed = weeks.slice(-rangeWeeks);
 const totalFormatted = total.toLocaleString();
 ---
 
@@ -27,33 +30,23 @@ const totalFormatted = total.toLocaleString();
   role="img"
   aria-label={`${totalFormatted} contributions in the last year`}
 >
-  <div class="caption mono">
-    <span class="num tabular-nums">{totalFormatted}</span>
-    <span class="lbl">contributions · last year</span>
-  </div>
   <div class="grid" aria-hidden="true">
     {trimmed.map((week, wi) => (
       <div class="col">
-        {week.days.map((day) => (
-          <span
-            class={`cell level-${day.level} ${wi < 14 ? "is-old" : ""}`}
-            style={{ background: LEVEL_BG[day.level] }}
-            data-date={day.date}
-            data-count={day.count}
-            title={`${day.count} contribution${day.count === 1 ? "" : "s"} on ${day.date}`}
-          />
-        ))}
+        {week.days.map((day) => {
+          const bg = day.count > YELLOW_THRESHOLD ? "#FFF247" : LEVEL_BG[day.level];
+          return (
+            <span
+              class={`cell level-${day.level} ${wi < Math.floor(rangeWeeks / 2.5) ? "is-old" : ""}`}
+              style={`background:${bg}`}
+              data-date={day.date}
+              data-count={day.count}
+              title={`${day.count} contribution${day.count === 1 ? "" : "s"} on ${day.date}`}
+            />
+          );
+        })}
       </div>
     ))}
-  </div>
-  <div class="legend mono" aria-hidden="true">
-    <span class="lbl">less</span>
-    <span class="legend-cell" style={{ background: LEVEL_BG[0] }}></span>
-    <span class="legend-cell" style={{ background: LEVEL_BG[1] }}></span>
-    <span class="legend-cell" style={{ background: LEVEL_BG[2] }}></span>
-    <span class="legend-cell" style={{ background: LEVEL_BG[3] }}></span>
-    <span class="legend-cell" style={{ background: LEVEL_BG[4] }}></span>
-    <span class="lbl">more</span>
   </div>
 </figure>
 
@@ -62,59 +55,32 @@ const totalFormatted = total.toLocaleString();
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.875rem;
-  }
-  .caption {
-    display: flex;
-    align-items: baseline;
-    gap: 0.5rem;
-    font-size: 11px;
-    color: var(--color-muted);
-    letter-spacing: 0.04em;
-  }
-  .caption .num {
-    color: var(--color-fg);
-    font-size: 13px;
-    font-weight: 500;
   }
   .grid {
     display: flex;
-    gap: 3px;
-    overflow-x: auto;
-    scrollbar-width: none;
-    padding-bottom: 2px;
+    gap: 4px;
+    overflow: hidden;
   }
-  .grid::-webkit-scrollbar { display: none; }
   .col {
     display: grid;
-    grid-template-rows: repeat(7, 12px);
-    gap: 3px;
+    grid-template-rows: repeat(7, 18px);
+    gap: 4px;
     flex-shrink: 0;
   }
   .cell {
-    width: 12px;
-    height: 12px;
-    border-radius: 2px;
+    width: 18px;
+    height: 18px;
+    border-radius: 0;
     transition: opacity 200ms ease;
   }
-  .legend {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 10px;
-    color: var(--color-faint);
-    letter-spacing: 0.04em;
-  }
-  .legend .lbl { margin-inline: 4px; }
-  .legend-cell {
-    width: 10px;
-    height: 10px;
-    border-radius: 2px;
-    display: inline-block;
-  }
-  @media (max-width: 768px) {
-    .col { grid-template-rows: repeat(7, 10px); }
-    .cell { width: 10px; height: 10px; }
+  @media (max-width: 900px) {
+    .col { grid-template-rows: repeat(7, 14px); gap: 3px; }
+    .cell { width: 14px; height: 14px; }
+    .grid { gap: 3px; }
     .is-old { display: none; }
+  }
+  @media (max-width: 480px) {
+    .col { grid-template-rows: repeat(7, 12px); }
+    .cell { width: 12px; height: 12px; }
   }
 </style>

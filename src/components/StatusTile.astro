@@ -1,0 +1,97 @@
+---
+interface Props {
+  available?: boolean;
+  message?: string;
+  replyTime?: string;
+}
+
+const {
+  available = true,
+  message = "Available for work",
+  replyTime = "≤ 24h · NZST",
+} = Astro.props;
+---
+
+<article class="st-tile" data-available={available}>
+  <div class="st-left">
+    <span class="st-dot" aria-hidden="true"></span>
+    <div class="st-text">
+      <span class="st-label">STATUS</span>
+      <span class="st-message">{message}</span>
+    </div>
+  </div>
+  <div class="st-right">
+    <span class="st-label">REPLY TIME</span>
+    <span class="st-reply">{replyTime}</span>
+  </div>
+</article>
+
+<style>
+  .st-tile {
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-hairline);
+    border-radius: 0;
+    padding: 20px 28px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+    gap: 16px;
+  }
+  .st-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .st-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 9999px;
+    background: var(--color-accent);
+    box-shadow: 0 0 0 4px rgba(255, 106, 61, 0.2);
+    flex-shrink: 0;
+  }
+  .st-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .st-right {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: flex-end;
+    text-align: right;
+  }
+  .st-label {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+  .st-message {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 22px;
+    letter-spacing: -0.015em;
+    color: var(--color-fg);
+    line-height: 1.1;
+  }
+  .st-reply {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--color-fg);
+  }
+  @media (max-width: 640px) {
+    .st-tile {
+      padding: 18px 20px;
+    }
+    .st-message {
+      font-size: 18px;
+    }
+  }
+</style>

@@ -1,73 +1,133 @@
 ---
+// Signal section. Left column: pitch + CTAs. Right column: channels card.
+// Cal.com URL is a reasonable placeholder; Jon will adjust.
 const channels = [
-  { label: "email", value: "jon@nextwork.org", href: "mailto:jon@nextwork.org" },
-  { label: "github", value: "@jonneylon", href: "https://github.com/jonneylon" },
-  { label: "x", value: "@jonneylon", href: "https://x.com/jonneylon" },
-  { label: "linkedin", value: "in/jonneylon", href: "https://www.linkedin.com/in/jonneylon" },
+  {
+    label: "Email",
+    sub: null as string | null,
+    value: "jon@nextwork.org",
+    valueFont: "sans" as "sans" | "mono",
+    right: "Primary →",
+    href: "mailto:jon@nextwork.org",
+    external: false,
+  },
+  {
+    label: "GitHub",
+    sub: "3",
+    value: "jonneylon · neylonjon · jonnext",
+    valueFont: "mono" as "sans" | "mono",
+    right: "Feed →",
+    href: "https://github.com/jonneylon",
+    external: true,
+  },
+  {
+    label: "X / Twitter",
+    sub: null as string | null,
+    value: "x.com/jonneylon",
+    valueFont: "mono" as "sans" | "mono",
+    right: "Live →",
+    href: "https://x.com/jonneylon",
+    external: true,
+  },
+  {
+    label: "LinkedIn",
+    sub: null as string | null,
+    value: "linkedin.com/in/jonneylon",
+    valueFont: "mono" as "sans" | "mono",
+    right: "CV →",
+    href: "https://linkedin.com/in/jonneylon",
+    external: true,
+  },
 ];
 ---
 
-<section id="signal" class="container-wide py-16 md:py-20">
-  <header class="flex items-baseline justify-between mb-8 gap-4">
-    <span class="section-label">signal</span>
-    <span class="mono text-[11px] text-[color:var(--color-faint)]">
-      reach me here · slow on weekends
-    </span>
-  </header>
+<section
+  id="signal"
+  class="container-wide hairline"
+  style="display: flex; flex-direction: row; padding: 80px 48px 64px; gap: 56px; align-items: flex-start; flex-wrap: wrap;"
+>
+  <div style="max-width: 560px; display: flex; flex-direction: column; gap: 24px;">
+    <div style="display: flex; flex-direction: row; align-items: center; gap: 12px;">
+      <span
+        aria-hidden="true"
+        style="width: 8px; height: 8px; border-radius: 9999px; background: var(--color-accent, #FF6A3D); flex-shrink: 0;"
+      ></span>
+      <span
+        style="font-family: var(--font-sans, 'Inter Variable', Inter, system-ui, sans-serif); font-weight: 500; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-muted, #71717A);"
+      >
+        Signal · Open for Work
+      </span>
+    </div>
 
-  <ul class="channels" role="list">
-    {channels.map((c) => (
-      <li class="row">
-        <span class="mono lbl">{c.label}</span>
-        <a class="val !border-none" href={c.href} target={c.href.startsWith("http") ? "_blank" : undefined} rel={c.href.startsWith("http") ? "noopener" : undefined}>
-          {c.value}
-          <span class="arrow" aria-hidden="true">→</span>
+    <h2
+      style="font-family: var(--font-display, 'Playfair Display Variable', 'Playfair Display', Georgia, serif); font-weight: 400; font-size: 56px; letter-spacing: -0.025em; line-height: 60px; color: var(--color-fg, #D4D4D8); margin: 0;"
+    >
+      Design-engineering, founding teams, occasional speaking.
+    </h2>
+
+    <p
+      class="mono"
+      style="font-family: var(--font-mono, ui-monospace, 'SF Mono', 'JetBrains Mono Variable', monospace); font-weight: 400; font-size: 11px; letter-spacing: 0.025em; line-height: 19.8px; text-transform: uppercase; color: var(--color-muted, #71717A); max-width: 480px; margin: 0;"
+    >
+      Reply time under 24 hours. NZST · UTC+12, but I keep odd hours so often faster.
+    </p>
+
+    <div style="display: flex; flex-direction: row; gap: 10px; padding-top: 12px; flex-wrap: wrap;">
+      <a
+        href="mailto:jon@nextwork.org"
+        style="display: inline-block; background: var(--color-cream, #E8E6E3); padding: 16px 28px; font-family: var(--font-sans, 'Inter Variable', Inter, system-ui, sans-serif); font-weight: 500; font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--color-bg, #111111); text-decoration: none; clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));"
+      >
+        Mail → jon@nextwork.org
+      </a>
+
+      <a
+        href="https://cal.com/jonneylon/30min"
+        target="_blank"
+        rel="noopener"
+        style="display: inline-block; padding: 16px 24px; font-family: var(--font-sans, 'Inter Variable', Inter, system-ui, sans-serif); font-weight: 500; font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--color-fg, #D4D4D8); text-decoration: none; border-bottom: 1px solid rgba(39, 39, 42, 0.6);"
+      >
+        Book a 30m chat →
+      </a>
+    </div>
+  </div>
+
+  <div
+    style="flex-grow: 1; max-width: 640px; background: var(--color-bg-elevated, #1A1A1A); border: 1px solid var(--color-hairline, #27272A); padding: 8px 0;"
+  >
+    {
+      channels.map((c, i) => (
+        <a
+          href={c.href}
+          target={c.external ? "_blank" : undefined}
+          rel={c.external ? "noopener" : undefined}
+          style={`display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 24px; text-decoration: none; ${i < channels.length - 1 ? "border-bottom: 1px solid var(--color-hairline, #27272A);" : ""}`}
+        >
+          <div style="display: flex; flex-direction: row; align-items: center; gap: 14px; min-width: 0; flex: 1;">
+            <span
+              style="font-family: var(--font-sans, 'Inter Variable', Inter, system-ui, sans-serif); font-weight: 500; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-muted, #71717A); width: 88px; flex-shrink: 0;"
+            >
+              {c.label}
+              {c.sub && (
+                <span style="color: var(--color-muted, #71717A);"> · {c.sub}</span>
+              )}
+            </span>
+            <span
+              style={
+                c.valueFont === "sans"
+                  ? "font-family: var(--font-sans, 'Inter Variable', Inter, system-ui, sans-serif); font-weight: 400; font-size: 15px; color: var(--color-fg, #D4D4D8); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
+                  : "font-family: var(--font-mono, ui-monospace, 'SF Mono', 'JetBrains Mono Variable', monospace); font-weight: 400; font-size: 13px; color: var(--color-fg, #D4D4D8); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
+              }
+            >
+              {c.value}
+            </span>
+          </div>
+          <span
+            style="font-family: var(--font-mono, ui-monospace, 'SF Mono', 'JetBrains Mono Variable', monospace); font-weight: 400; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-accent, #FF6A3D); flex-shrink: 0;"
+          >
+            {c.right}
+          </span>
         </a>
-      </li>
-    ))}
-  </ul>
+      ))
+    }
+  </div>
 </section>
-
-<style>
-  .channels {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  .row {
-    border-top: 1px solid var(--color-hairline);
-  }
-  .row:last-child {
-    border-bottom: 1px solid var(--color-hairline);
-  }
-  .row {
-    display: grid;
-    grid-template-columns: 120px 1fr;
-    align-items: baseline;
-    gap: 1rem;
-    padding: 0.875rem 0;
-  }
-  .lbl {
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--color-muted);
-  }
-  .val {
-    font-size: 16px;
-    color: var(--color-fg);
-    display: inline-flex;
-    align-items: baseline;
-    gap: 0.5rem;
-    transition: color 160ms ease;
-  }
-  .val .arrow {
-    color: var(--color-faint);
-    font-size: 13px;
-    transition: transform 160ms ease, color 160ms ease;
-  }
-  .val:hover .arrow {
-    transform: translateX(3px);
-    color: var(--color-accent);
-  }
-</style>

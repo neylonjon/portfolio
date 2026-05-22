@@ -1,29 +1,68 @@
 ---
-const buildVersion = "v0.1.0";
-const buildDate = new Date().toISOString().slice(0, 10);
+const navLinks = [
+  { href: "#now", label: "NOW", active: true },
+  { href: "#notes", label: "STREAM", active: false },
+  { href: "#signal", label: "SIGNAL", active: false },
+];
 ---
 
 <header class="hairline-b">
-  <div class="container-wide flex items-baseline justify-between py-5 gap-4">
+  <div
+    class="flex items-center justify-between gap-6"
+    style="padding: 20px 48px;"
+  >
     <a
       href="/"
-      class="!border-none text-base font-medium tracking-tight"
+      class="flex items-center gap-3 !border-none"
       aria-label="Jon Neylon, home"
     >
-      jon neylon
+      <span
+        class="flex items-center justify-center"
+        style="width: 32px; height: 32px; background: var(--color-accent); color: #111111; font-family: var(--font-sans); font-weight: 600; font-size: 13px;"
+        aria-hidden="true"
+      >
+        jn
+      </span>
+      <span class="flex flex-col leading-tight">
+        <span
+          style="font-family: var(--font-sans); font-weight: 600; font-size: 14px; color: var(--color-fg);"
+        >
+          Jon Neylon
+        </span>
+        <span
+          class="mono"
+          style="font-size: 10px; letter-spacing: 0.1em; color: var(--color-muted);"
+        >
+          DESIGN ENGINEER · WELLINGTON, NZ
+        </span>
+      </span>
     </a>
 
-    <nav aria-label="Section navigation" class="hidden sm:flex items-baseline gap-6 text-[13px]">
-      <a href="#now" class="text-[color:var(--color-muted)] hover:text-[color:var(--color-fg)] !border-none">now_</a>
-      <a href="#notes" class="text-[color:var(--color-muted)] hover:text-[color:var(--color-fg)] !border-none">notes_</a>
-      <a href="#signal" class="text-[color:var(--color-muted)] hover:text-[color:var(--color-fg)] !border-none">signal_</a>
-    </nav>
-
-    <span
-      class="mono text-[11px] text-[color:var(--color-faint)] tabular-nums whitespace-nowrap"
-      aria-label={`Build ${buildVersion} dated ${buildDate}`}
+    <div
+      class="status-pill hidden md:inline-flex"
+      role="status"
+      aria-label="Currently shipping, three accounts linked"
     >
-      {buildVersion} · {buildDate}
-    </span>
+      <span class="status-dot" aria-hidden="true"></span>
+      <span>CURRENTLY SHIPPING · 3 ACCOUNTS LINKED</span>
+    </div>
+
+    <div class="flex items-center gap-1">
+      <nav aria-label="Section navigation" class="hidden sm:flex items-center">
+        {navLinks.map((link) => (
+          <a
+            href={link.href}
+            class="!border-none"
+            style={`font-family: var(--font-sans); font-weight: ${link.active ? 500 : 400}; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: ${link.active ? "var(--color-fg)" : "var(--color-muted)"}; padding: 8px 14px;`}
+          >
+            {link.label}
+          </a>
+        ))}
+      </nav>
+
+      <a href="#contact" class="btn-cream !border-none ml-2">
+        Get In Touch <span aria-hidden="true">→</span>
+      </a>
+    </div>
   </div>
 </header>

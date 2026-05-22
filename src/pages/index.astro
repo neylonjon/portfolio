@@ -3,7 +3,6 @@ import Layout from "../layouts/Layout.astro";
 import Header from "../components/Header.astro";
 import Identity from "../components/Identity.astro";
 import NowFeed from "../components/NowFeed.astro";
-import FieldNotes from "../components/FieldNotes.astro";
 import Signal from "../components/Signal.astro";
 import Footer from "../components/Footer.astro";
 import HalftoneBackdrop from "../components/HalftoneBackdrop.astro";
@@ -26,7 +25,6 @@ Astro.response.headers.set(
   <main id="main">
     <Identity />
     <NowFeed data={data} />
-    <FieldNotes />
     <Signal />
   </main>
   <Footer />
