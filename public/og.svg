@@ -10,13 +10,13 @@
   <text x="104" y="76" font-family="Inter, system-ui, sans-serif" font-size="24" font-weight="600" fill="#D4D4D8">Jon Neylon</text>
 
   <!-- Role + location -->
-  <text x="104" y="102" font-family="ui-monospace, 'SF Mono', 'JetBrains Mono', monospace" font-size="16" fill="#71717A" letter-spacing="2">DESIGN ENGINEER · WELLINGTON, NZ</text>
+  <text x="104" y="102" font-family="ui-monospace, 'SF Mono', 'JetBrains Mono', monospace" font-size="15" fill="#71717A" letter-spacing="2">FOUNDING DESIGN ENGINEER @ NEXTWORK · AUSTIN, TX</text>
 
   <!-- Hero text -->
   <text font-family="'Playfair Display', Georgia, serif" font-size="76" font-weight="400" fill="#D4D4D8" letter-spacing="-2.5">
     <tspan x="60" y="260">Hey. I'm Jon.</tspan>
-    <tspan x="60" dy="86">I design, ship, and</tspan>
-    <tspan x="60" dy="86">work in public.</tspan>
+    <tspan x="60" dy="86">Founding design</tspan>
+    <tspan x="60" dy="86">engineer at NextWork.</tspan>
   </text>
 
   <!-- Hairline rule between hero and bottom row -->
