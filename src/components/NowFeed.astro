@@ -47,7 +47,7 @@ const refreshedAgo = formatSync(data.syncedAt);
       <div class="stream-body">
         {commitCount === 0 ? (
           <p class="stream-empty mono">
-            AWAITING FIRST SYNC. GITHUB TOKEN NOT YET CONFIGURED.
+            WAITING ON FIRST SYNC. TOKEN PENDING.
           </p>
         ) : (
           <CommitsTicker commits={data.commits} />
