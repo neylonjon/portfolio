@@ -16,6 +16,7 @@ export interface Commit {
   date: string;
   language: string | null;
   account: string;
+  isPrivate: boolean;
 }
 
 export interface GitHubData {
@@ -44,6 +45,7 @@ function userBlock(alias: string): string {
       repositories(first: 30, orderBy: { field: PUSHED_AT, direction: DESC }, ownerAffiliations: OWNER, isFork: false) {
         nodes {
           nameWithOwner
+          isPrivate
           primaryLanguage { name }
           defaultBranchRef {
             target {
@@ -73,6 +75,7 @@ interface RawUser {
   repositories: {
     nodes: Array<{
       nameWithOwner: string;
+      isPrivate: boolean;
       primaryLanguage: { name: string } | null;
       defaultBranchRef: {
         target: {
@@ -152,6 +155,7 @@ function mergeCommits(users: RawUser[], limit = 8): Commit[] {
           sha: c.oid.slice(0, 7),
           url: c.url,
           date: c.committedDate,
+          isPrivate: repo.isPrivate,
           language: repo.primaryLanguage?.name ?? null,
         });
       }

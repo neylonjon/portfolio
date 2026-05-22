@@ -46,17 +46,28 @@ function prBadge(message: string): string | null {
     const isLead = idx === 0;
     const dot = DOT_COLOR[c.account] ?? "#71717A";
     const badge = prBadge(c.message);
-    return (
-      <li class={`row ${isLead ? "row-lead" : ""}`}>
-        <a href={c.url} target="_blank" rel="noopener" class="row-link">
-          <span class="time mono tabular-nums" aria-label={c.date}>{relativeTime(c.date)}</span>
-          <span class="dot" style={`background:${dot}`} aria-hidden="true"></span>
-          <span class="body">
-            <span class="repo mono">{shortRepo(c.repo)}</span>
-            <span class="msg">{c.message}</span>
+    const rowClass = `row ${isLead ? "row-lead" : ""} ${c.isPrivate ? "row-private" : ""}`;
+    const inner = (
+      <>
+        <span class="time mono tabular-nums" aria-label={c.date}>{relativeTime(c.date)}</span>
+        <span class="dot" style={`background:${dot}`} aria-hidden="true"></span>
+        <span class="body">
+          <span class="repo mono">
+            {c.isPrivate && <span class="lock mono" aria-label="private">🔒</span>}
+            {shortRepo(c.repo)}
           </span>
-          {badge && <span class="badge mono">{badge}</span>}
-        </a>
+          <span class="msg">{c.message}</span>
+        </span>
+        {badge && <span class="badge mono">{badge}</span>}
+      </>
+    );
+    return (
+      <li class={rowClass}>
+        {c.isPrivate ? (
+          <span class="row-link row-link-static" aria-label="Private commit, not linked">{inner}</span>
+        ) : (
+          <a href={c.url} target="_blank" rel="noopener" class="row-link">{inner}</a>
+        )}
       </li>
     );
   })}
@@ -87,6 +98,17 @@ function prBadge(message: string): string | null {
   }
   .row-link:hover {
     background: rgba(255, 106, 61, 0.04);
+  }
+  .row-link-static {
+    cursor: default;
+  }
+  .row-link-static:hover {
+    background: transparent;
+  }
+  .lock {
+    margin-right: 6px;
+    font-size: 9px;
+    opacity: 0.7;
   }
   .row-lead .row-link:hover {
     background: rgba(255, 106, 61, 0.08);
