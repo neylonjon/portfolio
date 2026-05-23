@@ -1,56 +1,47 @@
-import { useEffect, useState } from "react";
 import { Dithering } from "@paper-design/shaders-react";
+import { useEffect, useState } from "react";
 
 /**
- * Animated dithered halftone overlay for tile containers.
- * Lifted directly from the artboard 82-0 hero on the Paper canvas:
- * <Dithering speed={2} shape="warp" type="8x8" size={1.1} scale={1.67} />
- * Recolored from the green (#00A44F) to the site's hot orange (#FF6A3D).
+ * Animated Paper Shaders Dithering overlay for the Now tiles.
  *
- * Renders as an absolutely positioned fill behind tile content. Idle
- * opacity is 0; CSS hover on the parent tile fades it in via the
- * .tile-shader-layer class in the parent's scoped styles.
+ * Sized 100% of its positioned wrapper. The wrapper handles `position: absolute`
+ * + opacity transitions; this island just paints a WebGL canvas that fills it.
  *
- * Respects prefers-reduced-motion by freezing the shader (speed: 0)
- * rather than removing it — visitors still see the static dither
- * pattern on hover, just without the movement.
+ * Gotcha learned the hard way: `colorBack="transparent"` is NOT a supported
+ * color format in @paper-design/shaders. The internal parser only handles
+ * strings starting with `#`, `rgb`, or `hsl`. Anything else (including the
+ * CSS keyword `transparent`) falls through to its fallback color, which is
+ * `[0, 0, 0, 1]` — opaque black. That's why the prior attempt rendered as
+ * solid black tiles. Use 8-char hex with alpha=00 instead.
+ *
+ * Respects prefers-reduced-motion by freezing the shader at speed=0.
  */
-interface Props {
-  /** Lower = subtler. Higher = more visible movement. */
-  speed?: number;
-  /** Foreground color of the dither pattern. Default: site accent. */
-  colorFront?: string;
-}
-
-export default function TileShader({
-  speed = 1.5,
-  colorFront = "#FF6A3D",
-}: Props) {
-  const [reduceMotion, setReduceMotion] = useState(false);
+export default function TileShader() {
+  const [reducedMotion, setReducedMotion] = useState(false);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReduceMotion(mq.matches);
-    const handler = (e: MediaQueryListEvent) => setReduceMotion(e.matches);
-    mq.addEventListener("change", handler);
-    return () => mq.removeEventListener("change", handler);
+    setReducedMotion(mq.matches);
+    const onChange = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
   }, []);
 
   return (
     <Dithering
-      speed={reduceMotion ? 0 : speed}
+      speed={reducedMotion ? 0 : 1.5}
       shape="warp"
       type="8x8"
       size={1.1}
       scale={1.67}
-      colorBack="transparent"
-      colorFront={colorFront}
-      width="100%"
-      height="100%"
+      colorFront="#FF6A3D"
+      colorBack="#00000000"
       style={{
         position: "absolute",
         inset: 0,
-        pointerEvents: "none",
+        width: "100%",
+        height: "100%",
+        display: "block",
       }}
     />
   );

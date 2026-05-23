@@ -17,9 +17,7 @@ const {
 ---
 
 <article class="cb-tile">
-  <div class="cb-shader-layer" aria-hidden="true">
-    <TileShader client:load />
-  </div>
+  <div class="cb-shader-layer" aria-hidden="true"><TileShader client:load /></div>
   <header class="cb-head">
     <div class="cb-label-row">
       <span class="cb-diamond" aria-hidden="true"></span>
@@ -73,20 +71,15 @@ const {
     transition: box-shadow 280ms var(--ease-out-quart),
                 animation-duration 280ms ease;
   }
-  /* Shader overlay: absolute-positioned Dithering canvas behind tile content.
-     No mix-blend-mode: the dither is rendered with transparent background
-     and rich orange foreground, so a straight overlay reads cleanly. */
+  /* Halftone overlay layer. Subtly always-on at ~0.45 so the featured
+     tile carries texture even before interaction, brightens to 0.85
+     on hover. The TileShader React island paints a WebGL Dithering
+     canvas; this wrapper handles positioning + opacity transitions. */
   .cb-shader-layer {
     position: absolute;
     inset: 0;
     z-index: 0;
-    /* DEBUG: solid orange tint on the layer so we can verify the layer
-       itself is rendering at the right position/size. If you see an
-       orange wash on the CurrentlyBuilding tile after this deploy, the
-       layer + positioning are fine and the Dithering shader is broken.
-       If still nothing, the layer is not rendering. */
-    opacity: 1;
-    background: rgba(255, 106, 61, 0.3);
+    opacity: 0.45;
     transition: opacity 350ms var(--ease-out-quart);
     pointer-events: none;
   }
@@ -103,7 +96,7 @@ const {
         0 0 0 1px rgba(255, 106, 61, 0.18);
     }
     .cb-tile:hover .cb-shader-layer {
-      opacity: 0.7;
+      opacity: 0.85;
     }
   }
   @media (prefers-reduced-motion: reduce) {
@@ -204,9 +197,25 @@ const {
     color: var(--color-fg);
   }
   @media (max-width: 900px) {
+    .cb-tile {
+      padding: 24px 26px;
+    }
     .cb-headline {
       font-size: 28px;
       line-height: 32px;
+      margin: 18px 0 12px;
+    }
+  }
+  @media (max-width: 640px) {
+    .cb-tile {
+      padding: 20px 22px;
+    }
+    .cb-headline {
+      font-size: 24px;
+      line-height: 28px;
+    }
+    .cb-foot-msg {
+      font-size: 12px;
     }
   }
 </style>

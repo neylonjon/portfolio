@@ -54,14 +54,14 @@
   --font-sans: "Gosha Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-mono: ui-monospace, "SF Mono", "JetBrains Mono Variable", Menlo, Consolas, monospace;
 
-  /* Type scale: Axiom hierarchy */
-  --text-hero: 76px;          /* Playfair 400, -0.025em, 80px line */
-  --text-display: 56px;       /* Playfair 400, -0.025em, 60px line */
-  --text-tile: 36px;          /* Playfair 400, -0.02em, 40px line */
-  --text-body: 14px;          /* Inter 400, 22px line */
-  --text-body-mono: 11px;     /* SF Mono 400, 0.025em, uppercase */
-  --text-label: 11px;         /* Inter 500, 0.18em, uppercase */
-  --text-caps: 10px;          /* Inter 500, 0.18em, uppercase */
+  /* Type scale: Axiom hierarchy (Gosha + mono) */
+  --text-hero: 76px;          /* Gosha 400, -0.025em, 80px line */
+  --text-display: 56px;       /* Gosha 400, -0.025em, 60px line */
+  --text-tile: 36px;          /* Gosha 400, -0.02em, 40px line */
+  --text-body: 14px;          /* Gosha 400, 22px line */
+  --text-body-mono: 11px;     /* mono 400, 0.025em, uppercase */
+  --text-label: 11px;         /* Gosha 500, 0.18em, uppercase */
+  --text-caps: 10px;          /* Gosha 500, 0.18em, uppercase */
 
   --leading-hero: 80px;
   --leading-display: 60px;
@@ -171,6 +171,16 @@
     max-width: var(--content-wide);
     margin-inline: auto;
     padding-inline: var(--space-gutter);
+  }
+  @media (max-width: 900px) {
+    .container-wide {
+      padding-inline: 32px;
+    }
+  }
+  @media (max-width: 640px) {
+    .container-wide {
+      padding-inline: 20px;
+    }
   }
 
   .section-label {

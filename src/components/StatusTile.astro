@@ -26,13 +26,6 @@ const {
   <div class="st-right">
     <span class="st-label">REPLY TIME</span>
     <span class="st-reply">{replyTime}</span>
-    <a
-      class="st-book"
-      href="https://cal.com/jon-neylon/30min"
-      target="_blank"
-      rel="noopener"
-      aria-label="Book a 30 minute chat"
-    >Book 30m →</a>
   </div>
 </article>
 
@@ -124,23 +117,16 @@ const {
     font-size: 14px;
     color: var(--color-fg);
   }
-  .st-book {
-    margin-top: 6px;
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--color-accent);
-    text-decoration: none;
-    border: none;
-    transition: opacity 160ms ease;
-  }
-  .st-book:hover {
-    opacity: 0.7;
-  }
   @media (max-width: 640px) {
     .st-tile {
       padding: 18px 20px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .st-right {
+      align-items: flex-start;
+      text-align: left;
     }
     .st-message {
       font-size: 18px;

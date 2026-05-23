@@ -2,7 +2,6 @@
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import vercel from '@astrojs/vercel';
-
 import react from '@astrojs/react';
 
 export default defineConfig({
@@ -13,6 +12,8 @@ export default defineConfig({
     maxDuration: 10,
   }),
 
+  integrations: [react()],
+
   site: 'https://jonneylon.com',
 
   vite: {
@@ -22,6 +23,4 @@ export default defineConfig({
   prefetch: {
     prefetchAll: false,
   },
-
-  integrations: [react()],
 });

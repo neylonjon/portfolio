@@ -43,40 +43,40 @@ const channels = [
 
 <section
   id="signal"
-  class="container-wide hairline hairline-sweep hairline-sweep-top"
-  style="--hair-sweep-delay: 2.3s; display: flex; flex-direction: row; padding: 80px 48px 64px; gap: 56px; align-items: flex-start; flex-wrap: wrap;"
+  class="container-wide hairline hairline-sweep hairline-sweep-top signal-section"
+  style="--hair-sweep-delay: 2.3s; display: flex; flex-direction: row; gap: 56px; align-items: flex-start; flex-wrap: wrap;"
 >
-  <div style="max-width: 560px; display: flex; flex-direction: column; gap: 24px;">
+  <div class="signal-pitch" style="max-width: 560px; display: flex; flex-direction: column; gap: 24px;">
     <div class="reveal" style="--reveal-delay: 0ms; display: flex; flex-direction: row; align-items: center; gap: 12px;">
       <span
         aria-hidden="true"
-        style="width: 8px; height: 8px; border-radius: 9999px; background: var(--color-accent, #FF6A3D); flex-shrink: 0;"
+        style="width: 8px; height: 8px; border-radius: 9999px; background: var(--color-accent); flex-shrink: 0;"
       ></span>
       <span
-        style="font-family: var(--font-sans, 'Inter Variable', Inter, system-ui, sans-serif); font-weight: 500; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-muted, #71717A);"
+        style="font-family: var(--font-sans); font-weight: 500; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-muted);"
       >
-        Signal
+        Vibes
       </span>
     </div>
 
     <h2
-      class="reveal"
-      style="--reveal-delay: 80ms; font-family: var(--font-display, 'Playfair Display Variable', 'Playfair Display', Georgia, serif); font-weight: 400; font-size: 56px; letter-spacing: -0.025em; line-height: 60px; color: var(--color-fg, #D4D4D8); margin: 0;"
+      class="reveal signal-h2"
+      style="--reveal-delay: 80ms; font-family: var(--font-display); font-weight: 400; letter-spacing: -0.025em; color: var(--color-fg); margin: 0;"
     >
-      Design + code + AI agents. Rethinking how we learn online at NextWork.
+      Design + Code + AI agents. Currently Rethinking how we learn online at NextWork.org
     </h2>
 
     <p
       class="mono"
-      style="font-family: var(--font-mono, ui-monospace, 'SF Mono', 'JetBrains Mono Variable', monospace); font-weight: 400; font-size: 11px; letter-spacing: 0.025em; line-height: 19.8px; text-transform: uppercase; color: var(--color-muted, #71717A); max-width: 480px; margin: 0;"
+      style="font-family: var(--font-mono); font-weight: 400; font-size: 11px; letter-spacing: 0.025em; line-height: 19.8px; text-transform: uppercase; color: var(--color-muted); max-width: 480px; margin: 0;"
     >
-      Reply under 24h. CT · UTC-5. Always up for design engineering chats, AI agent talk, or rethinking the systems most people stopped questioning.
+      Always up for design engineering chats, AI agent talk, or rethinking the systems most people stopped questioning.
     </p>
 
     <div style="display: flex; flex-direction: row; gap: 10px; padding-top: 12px; flex-wrap: wrap;">
       <a
         href="mailto:jon@nextwork.org"
-        style="display: inline-block; background: var(--color-cream, #E8E6E3); padding: 16px 28px; font-family: var(--font-sans, 'Inter Variable', Inter, system-ui, sans-serif); font-weight: 500; font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--color-bg, #111111); text-decoration: none; clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));"
+        style="display: inline-block; background: var(--color-cream); padding: 16px 28px; font-family: var(--font-sans); font-weight: 500; font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--color-bg); text-decoration: none; clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));"
       >
         Mail → jon@nextwork.org
       </a>
@@ -85,7 +85,7 @@ const channels = [
         href="https://cal.com/jon-neylon/30min"
         target="_blank"
         rel="noopener"
-        style="display: inline-block; padding: 16px 24px; font-family: var(--font-sans, 'Inter Variable', Inter, system-ui, sans-serif); font-weight: 500; font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--color-fg, #D4D4D8); text-decoration: none; border-bottom: 1px solid rgba(39, 39, 42, 0.6);"
+        style="display: inline-block; padding: 16px 24px; font-family: var(--font-sans); font-weight: 500; font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--color-fg); text-decoration: none; border-bottom: 1px solid rgba(39, 39, 42, 0.6);"
       >
         Book 30m →
       </a>
@@ -93,8 +93,8 @@ const channels = [
   </div>
 
   <div
-    class="reveal"
-    style="--reveal-delay: 160ms; flex-grow: 1; max-width: 640px; background: var(--color-bg-elevated, #1A1A1A); border: 1px solid var(--color-hairline, #27272A); padding: 8px 0;"
+    class="reveal channels-card"
+    style="--reveal-delay: 160ms; flex-grow: 1; max-width: 640px; background: var(--color-bg-elevated); border: 1px solid var(--color-hairline); padding: 8px 0;"
   >
     {
       channels.map((c, i) => (
@@ -102,29 +102,32 @@ const channels = [
           href={c.href}
           target={c.external ? "_blank" : undefined}
           rel={c.external ? "noopener" : undefined}
-          style={`display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 24px; text-decoration: none; ${i < channels.length - 1 ? "border-bottom: 1px solid var(--color-hairline, #27272A);" : ""}`}
+          class="channel-row"
+          style={`text-decoration: none; ${i < channels.length - 1 ? "border-bottom: 1px solid var(--color-hairline);" : ""}`}
         >
-          <div style="display: flex; flex-direction: row; align-items: center; gap: 14px; min-width: 0; flex: 1;">
+          <div class="channel-row-left">
             <span
-              style="font-family: var(--font-sans, 'Inter Variable', Inter, system-ui, sans-serif); font-weight: 500; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-muted, #71717A); width: 88px; flex-shrink: 0;"
+              class="channel-label"
+              style="font-family: var(--font-sans); font-weight: 500; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-muted); flex-shrink: 0;"
             >
               {c.label}
               {c.sub && (
-                <span style="color: var(--color-muted, #71717A);"> · {c.sub}</span>
+                <span style="color: var(--color-muted);"> · {c.sub}</span>
               )}
             </span>
             <span
+              class="channel-value"
               style={
                 c.valueFont === "sans"
-                  ? "font-family: var(--font-sans, 'Inter Variable', Inter, system-ui, sans-serif); font-weight: 400; font-size: 15px; color: var(--color-fg, #D4D4D8); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
-                  : "font-family: var(--font-mono, ui-monospace, 'SF Mono', 'JetBrains Mono Variable', monospace); font-weight: 400; font-size: 13px; color: var(--color-fg, #D4D4D8); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
+                  ? "font-family: var(--font-sans); font-weight: 400; font-size: 15px; color: var(--color-fg); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
+                  : "font-family: var(--font-mono); font-weight: 400; font-size: 13px; color: var(--color-fg); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
               }
             >
               {c.value}
             </span>
           </div>
           <span
-            style="font-family: var(--font-mono, ui-monospace, 'SF Mono', 'JetBrains Mono Variable', monospace); font-weight: 400; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-accent, #FF6A3D); flex-shrink: 0;"
+            style="font-family: var(--font-mono); font-weight: 400; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-accent); flex-shrink: 0;"
           >
             {c.right}
           </span>
@@ -133,3 +136,68 @@ const channels = [
     }
   </div>
 </section>
+
+<style>
+  .signal-section {
+    padding: 80px 48px 64px;
+  }
+  .signal-h2 {
+    font-size: 56px;
+    line-height: 60px;
+  }
+  .channel-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 24px;
+  }
+  .channel-row-left {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+    flex: 1;
+  }
+  .channel-label {
+    width: 88px;
+  }
+  @media (max-width: 900px) {
+    .signal-section {
+      padding: 56px 32px 48px;
+      gap: 32px;
+    }
+    .signal-h2 {
+      font-size: 40px;
+      line-height: 44px;
+    }
+    .channels-card {
+      width: 100%;
+    }
+  }
+  @media (max-width: 640px) {
+    .signal-section {
+      padding: 40px 20px 32px;
+    }
+    .signal-h2 {
+      font-size: 32px;
+      line-height: 36px;
+    }
+    .channel-row {
+      padding: 14px 18px;
+      gap: 12px;
+    }
+    .channel-row-left {
+      gap: 10px;
+    }
+    .channel-label {
+      width: 72px;
+      font-size: 9px;
+      letter-spacing: 0.14em;
+    }
+    .channel-value {
+      font-size: 13px !important;
+    }
+  }
+</style>

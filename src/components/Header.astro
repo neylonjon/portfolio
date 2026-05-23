@@ -1,27 +1,31 @@
 ---
 const navLinks = [
   { href: "#now", label: "NOW", active: true },
+  { href: "#stream", label: "STREAM", active: false },
   { href: "#signal", label: "SIGNAL", active: false },
 ];
 ---
 
 <header class="hairline-b hairline-sweep" style="--hair-sweep-delay: 0s;">
-  <div
-    class="flex items-center justify-between gap-6"
-    style="padding: 20px 48px;"
-  >
+  <div class="header-row">
     <a
       href="/"
-      class="flex items-center gap-3 !border-none"
+      class="!border-none"
+      style="display: flex; align-items: center; gap: 14px; color: var(--color-fg);"
       aria-label="Jon Neylon, home"
     >
-      <span
-        class="flex items-center justify-center"
-        style="width: 32px; height: 32px; background: var(--color-accent); color: #111111; font-family: var(--font-sans); font-weight: 600; font-size: 13px;"
+      <svg
+        viewBox="0 0 1322 1210"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
         aria-hidden="true"
+        style="width: 31px; height: auto; flex-shrink: 0;"
       >
-        jn
-      </span>
+        <path
+          d="M1290 1210H616C598.327 1210 584 1195.67 584 1178V355.5C584 337.827 569.673 323.5 552 323.5H531C513.327 323.5 499 337.827 499 355.5V1178C499 1195.67 484.673 1210 467 1210H299.592C134.132 1210 0 1075.87 0 910.408C0 897.204 10.704 886.5 23.908 886.5H153.5C171.173 886.5 185.5 872.173 185.5 854.5V32C185.5 14.327 199.827 0 217.5 0H883.5C901.173 0 915.5 14.327 915.5 32V854.5C915.5 872.173 929.827 886.5 947.5 886.5H969.5C987.173 886.5 1001.5 872.173 1001.5 854.5V32C1001.5 14.327 1015.83 0 1033.5 0H1290C1307.67 0 1322 14.327 1322 32V1178C1322 1195.67 1307.67 1210 1290 1210Z"
+          fill="currentColor"
+        />
+      </svg>
       <span class="flex flex-col leading-tight">
         <span
           style="font-family: var(--font-sans); font-weight: 600; font-size: 14px; color: var(--color-fg);"
@@ -29,7 +33,7 @@ const navLinks = [
           Jon Neylon
         </span>
         <span
-          class="mono"
+          class="mono header-caption"
           style="font-size: 10px; letter-spacing: 0.1em; color: var(--color-muted);"
         >
           FOUNDING DESIGN ENGINEER @ NEXTWORK · AUSTIN, TX
@@ -59,9 +63,43 @@ const navLinks = [
         ))}
       </nav>
 
-      <a href="#signal" class="btn-cream !border-none ml-2">
-        Say Hi <span aria-hidden="true">→</span>
+      <a href="#signal" class="btn-cream !border-none ml-2 header-cta">
+        <span class="header-cta-text">Say Hi</span> <span aria-hidden="true">→</span>
       </a>
     </div>
   </div>
 </header>
+
+<style>
+  .header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 20px 48px;
+  }
+  @media (max-width: 900px) {
+    .header-row {
+      padding: 16px 32px;
+      gap: 16px;
+    }
+  }
+  @media (max-width: 640px) {
+    .header-row {
+      padding: 14px 20px;
+      gap: 12px;
+    }
+    .header-caption {
+      display: none;
+    }
+    .header-cta {
+      padding: 10px 16px !important;
+      font-size: 10px !important;
+    }
+  }
+  @media (max-width: 380px) {
+    .header-cta-text {
+      display: none;
+    }
+  }
+</style>
