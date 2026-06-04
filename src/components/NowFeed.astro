@@ -26,13 +26,42 @@ function formatSync(iso: string) {
 const totalCadence = data.totalContributions > 0 ? data.totalContributions.toLocaleString() : "0";
 const commitCount = data.commits.length;
 const refreshedAgo = formatSync(data.syncedAt);
+
+// Compute current streak: consecutive trailing days (walking back from today)
+// with at least one contribution. Reads the flattened contributions grid in
+// reverse chronological order and stops at the first zero-day.
+function computeStreak(weeks: typeof data.contributions): number {
+  const days = weeks.flatMap((w) => w.days);
+  // Sort descending by date so we walk newest → oldest
+  const sorted = [...days].sort((a, b) => b.date.localeCompare(a.date));
+  let streak = 0;
+  for (const d of sorted) {
+    if (d.count > 0) streak++;
+    else break;
+  }
+  return streak;
+}
+const streakDays = computeStreak(data.contributions);
+
+// Currently Building tile: latest commit drives the live state. When the
+// stream is empty (PAT scope issue, no data), the CurrentlyBuilding props
+// fall back to the curated copy baked into that component's defaults.
+const latestCommit = data.commits[0];
+const cbProps = latestCommit
+  ? {
+      headline: latestCommit.message,
+      sub: `${latestCommit.repo}${latestCommit.language ? ` · ${latestCommit.language}` : ""} · live feed`,
+      lastCommitAgo: `LAST COMMIT · ${formatSync(latestCommit.date).toUpperCase()} AGO`,
+      lastCommitMessage: latestCommit.message,
+    }
+  : {};
 ---
 
 <section id="now" class="container-wide now-section">
   <div class="now-canvas">
     {/* CURRENTLY BUILDING tile (rotated big tile, top-left) */}
     <div class="tile tile-cb tile-hover reveal" style="--reveal-delay: 0ms;">
-      <CurrentlyBuilding />
+      <CurrentlyBuilding {...cbProps} />
     </div>
 
     {/* LIVE COMMIT STREAM tile (tall, right) */}
@@ -90,7 +119,7 @@ const refreshedAgo = formatSync(data.syncedAt);
 
       <footer class="cadence-foot">
         <span class="cadence-total">{totalCadence}</span>
-        <span class="cadence-streak mono">STREAK · 48D</span>
+        <span class="cadence-streak mono">STREAK · {streakDays}D</span>
       </footer>
     </div>
 
