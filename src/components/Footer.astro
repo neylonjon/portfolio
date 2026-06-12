@@ -25,6 +25,16 @@ const buildDate = new Date().toISOString().slice(0, 10);
     </p>
 
     <a
+      href="https://github.com/neylonjon/jonneylon-atomic-kit"
+      target="_blank"
+      rel="noopener"
+      class="!border-none footer-kit-link mono"
+      aria-label="Atomic brand kit on GitHub"
+    >
+      ATOMIC KIT <span aria-hidden="true">↗</span>
+    </a>
+
+    <a
       href="#main"
       class="!border-none footer-top-btn"
     >
@@ -67,6 +77,16 @@ const buildDate = new Date().toISOString().slice(0, 10);
     text-transform: uppercase;
     color: #111111;
     text-decoration: none;
+  }
+  .footer-kit-link {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: rgba(17, 17, 17, 0.75);
+    text-decoration: none;
+    transition: color 160ms ease;
+  }
+  .footer-kit-link:hover {
+    color: #111111;
   }
   .footer-wordmark-wrap {
     display: flex;
